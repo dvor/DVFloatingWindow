@@ -7,15 +7,22 @@
 //
 
 #import "DVAppDelegate.h"
+#import "DVFloatingWindow.h"
+#import "DVSampleViewController.h"
 
 @implementation DVAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+
+    self.window.rootViewController = [DVSampleViewController new];
+
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+
+    [[DVFloatingWindow sharedInstance] show];
+
     return YES;
 }
 
