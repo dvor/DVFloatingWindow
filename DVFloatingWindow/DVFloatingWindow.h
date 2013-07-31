@@ -19,6 +19,7 @@
 - (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
                               minimumPressDuration:(CFTimeInterval)minimumPressDuration;
 
+- (void)tabShowPrevious;
 - (void)tabShowNext;
 
 - (void)loggerCreate:(NSString *)key;

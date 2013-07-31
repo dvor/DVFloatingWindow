@@ -12,6 +12,7 @@
 #define BORDER_SIZE 2
 #define TOP_BORDER_HEIGHT 15
 #define BOTTOM_CORNER_SIZE 15
+#define MOVEMENT_BUTTON_WIDTH 30
 
 #define MIN_ORIGIN_Y 20
 #define MIN_VISIBLE_SIZE 15
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UILabel *topTitleLabel;
 @property (strong, nonatomic) UIView *bottomCorner;
+@property (strong, nonatomic) UIButton *previousButton;
 @property (strong, nonatomic) UIButton *nextButton;
 
 @property (strong, nonatomic) NSMutableArray *arrayWithButtons;
@@ -108,6 +110,10 @@
         BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
     self.tableView.frame = frame;
 
+    frame = self.previousButton.frame;
+    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
+    self.previousButton.frame = frame;
+
     frame = self.nextButton.frame;
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.nextButton.frame = frame;
@@ -161,30 +167,14 @@
 
 #pragma mark -  Methods tab
 
+- (void)tabShowPrevious
+{
+    [self tabShowNextOrNot:NO];
+}
+
 - (void)tabShowNext
 {
-    if (! self.dictWithLoggers.count) {
-        return;
-    }
-    NSArray *keys = [self sortedLoggersKeys];
-
-    if (self.areButtonsVisible) {
-        self.visibleLoggerKey = keys[0];
-        self.areButtonsVisible = NO;
-    }
-    else {
-        NSUInteger index = 1 + [keys indexOfObject:self.visibleLoggerKey];
-
-        if (index < keys.count) {
-            self.visibleLoggerKey = keys[index];
-        }
-        else {
-            self.areButtonsVisible = YES;
-        }
-    }
-
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+    [self tabShowNextOrNot:YES];
 }
 
 #pragma mark -  Methods logger
@@ -366,14 +356,32 @@
     }
 
     {
-        self.nextButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        self.previousButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [self.previousButton setTitle:@"<" forState:UIControlStateNormal];
+        [self.previousButton addTarget:self
+                            action:@selector(tabShowPrevious)
+                  forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.previousButton];
+
+        CGRect frame = self.previousButton.frame;
+        frame.origin.x = BORDER_SIZE;
+        frame.size.width = MOVEMENT_BUTTON_WIDTH;
+        frame.size.height = BOTTOM_CORNER_SIZE;
+        self.previousButton.frame = frame;
+    }
+
+    {
+        self.nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [self.nextButton setTitle:@">" forState:UIControlStateNormal];
         [self.nextButton addTarget:self
                             action:@selector(tabShowNext)
                   forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.nextButton];
 
         CGRect frame = self.nextButton.frame;
-        frame.origin.x = BORDER_SIZE;
+        frame.origin.x = BORDER_SIZE + MOVEMENT_BUTTON_WIDTH;
+        frame.size.width = MOVEMENT_BUTTON_WIDTH;
+        frame.size.height = BOTTOM_CORNER_SIZE;
         self.nextButton.frame = frame;
     }
 
@@ -439,6 +447,35 @@
         self.topTitleLabel.text = [NSString stringWithFormat:@"%d <<%@>>",
             [keys indexOfObject:self.visibleLoggerKey], self.visibleLoggerKey];
     }
+}
+
+- (void)tabShowNextOrNot:(BOOL)showNext
+{
+    if (! self.dictWithLoggers.count) {
+        return;
+    }
+    NSArray *keys = [self sortedLoggersKeys];
+
+    if (self.areButtonsVisible) {
+        NSUInteger index = showNext ? 0 : keys.count-1;
+
+        self.visibleLoggerKey = keys[index];
+        self.areButtonsVisible = NO;
+    }
+    else {
+        NSInteger index = [keys indexOfObject:self.visibleLoggerKey];
+        index += showNext ? 1 : -1;
+
+        if (index >= 0 && index < keys.count) {
+            self.visibleLoggerKey = keys[index];
+        }
+        else {
+            self.areButtonsVisible = YES;
+        }
+    }
+
+    [self updateTopTitleLabelText];
+    [self.tableView reloadData];
 }
 
 @end
