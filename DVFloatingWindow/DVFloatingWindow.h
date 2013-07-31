@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DVDefinitions.h"
 
 @interface DVFloatingWindow : UIView
 
@@ -14,5 +15,8 @@
 
 - (void)show;
 - (void)hide;
+
+- (void)addButtonWithTitle:(NSString *)title
+                   handler:(DVFloatingWindowButtonHandler)handler;
 
 @end

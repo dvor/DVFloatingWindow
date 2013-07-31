@@ -22,6 +22,13 @@
     [self.window makeKeyAndVisible];
 
     [[DVFloatingWindow sharedInstance] show];
+    
+    for (int i = 0; i < 20; i++) {
+        NSString *title = [NSString stringWithFormat:@"title %d", i]; 
+        [[DVFloatingWindow sharedInstance] addButtonWithTitle:title handler:^{
+            NSLog(@"---- %@", title);
+        }];
+    }
 
     return YES;
 }

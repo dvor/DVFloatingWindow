@@ -7,7 +7,10 @@
 //
 
 #import "DVFloatingWindow.h"
+#import "DVButtonCell.h"
+#import "DVButtonObject.h"
 
+#define BORDER_SIZE 2
 #define TOP_BORDER_HEIGHT 15
 #define BOTTOM_CORNER_SIZE 15
 
@@ -16,10 +19,13 @@
 #define MIN_WIDTH 30
 #define MIN_HEIGHT 30
 
-@interface DVFloatingWindow()
+@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
+@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *topBorder;
 @property (strong, nonatomic) UIView *bottomCorner;
+
+@property (strong, nonatomic) NSMutableArray *arrayWithThings;
 
 @end
 
@@ -36,11 +42,12 @@
 - (id)initPrivate
 {
     if (self = [super initWithFrame:CGRectZero]) {
+        [self createSubviews];
 
         self.frame = CGRectMake(0, 100, 100, 100);
-        self.backgroundColor = [UIColor redColor];
+        self.backgroundColor = [UIColor lightGrayColor];
 
-        [self createSubviews];
+        self.arrayWithThings = [NSMutableArray new];
     }
 
     return self;
@@ -74,6 +81,15 @@
     [self removeFromSuperview];
 }
 
+- (void)addButtonWithTitle:(NSString *)title
+                   handler:(DVFloatingWindowButtonHandler)handler
+{
+    DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
+
+    [self.arrayWithThings addObject:object];
+    [self.tableView reloadData];
+}
+
 - (void)setFrame:(CGRect)frame
 {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
@@ -99,13 +115,21 @@
 
     [super setFrame:frame];
 
+    frame = CGRectZero;
+    frame.origin.x = BORDER_SIZE;
+    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
+    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
+    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
+        2 * BORDER_SIZE;
+    self.tableView.frame = frame;
+
     frame = self.topBorder.frame;
-    frame.size.width = self.frame.size.width;
+    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     self.topBorder.frame = frame;
 
     frame = self.bottomCorner.frame;
-    frame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE;
-    frame.origin.y = self.frame.size.height - BOTTOM_CORNER_SIZE;
+    frame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE - BORDER_SIZE;
+    frame.origin.y = self.frame.size.height - BOTTOM_CORNER_SIZE - BORDER_SIZE;
     self.bottomCorner.frame = frame;
 }
 
@@ -135,13 +159,60 @@
     self.frame = frame;
 }
 
+#pragma mark -  UITableView dataSource
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *buttonIdentifier = @"DVButtonCell";
+    DVButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:buttonIdentifier];
+
+    if (! cell) {
+        cell = [[DVButtonCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                   reuseIdentifier:buttonIdentifier];
+    }
+
+    DVButtonObject *object = self.arrayWithThings[indexPath.row];
+    cell.textLabel.text = object.name;
+
+    return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
+{
+    return self.arrayWithThings.count;
+}
+
+#pragma mark -  UITableView delegate
+
+- (void)       tableView:(UITableView *)tableView
+ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row >= self.arrayWithThings.count) {
+        return;
+    }
+
+    DVButtonObject *object = self.arrayWithThings[indexPath.row];
+    if (object.handler) {
+        object.handler();
+    }
+}
+
 #pragma mark -  Supporting methods
 
 - (void)createSubviews
 {
     {
+        self.tableView = [UITableView new];
+        self.tableView.dataSource = self;
+        self.tableView.delegate = self;
+        [self addSubview:self.tableView];
+    }
+
+    {
         CGRect frame = CGRectZero;
-        frame.size.width = self.frame.size.width;
+        frame.origin.x = frame.origin.y = BORDER_SIZE;
         frame.size.height = TOP_BORDER_HEIGHT;
 
         self.topBorder = [[UIView alloc] initWithFrame:frame];
@@ -156,8 +227,6 @@
     {
         CGRect frame = CGRectZero;
         frame.size.width = frame.size.height = BOTTOM_CORNER_SIZE;
-        frame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE;
-        frame.origin.y = self.frame.size.height - BOTTOM_CORNER_SIZE;
 
         self.bottomCorner = [[UIView alloc] initWithFrame:frame];
         self.bottomCorner.backgroundColor = [UIColor yellowColor];

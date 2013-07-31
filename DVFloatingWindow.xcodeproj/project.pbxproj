@@ -10,6 +10,8 @@
 		2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */; };
 		2D28DF5D17A1FF7600C0E49B /* DVSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28DF5B17A1FF7600C0E49B /* DVSampleViewController.m */; };
 		2D28DF5E17A1FF7600C0E49B /* DVSampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D28DF5C17A1FF7600C0E49B /* DVSampleViewController.xib */; };
+		2D889C9E17A9BAA100A4F0E6 /* DVButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889C9D17A9BAA100A4F0E6 /* DVButtonCell.m */; };
+		2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */; };
 		2DD8D8ED1799D9DF00538E90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DD8D8EC1799D9DF00538E90 /* UIKit.framework */; };
 		2DD8D8EF1799D9DF00538E90 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DD8D8EE1799D9DF00538E90 /* Foundation.framework */; };
 		2DD8D8F11799D9DF00538E90 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DD8D8F01799D9DF00538E90 /* CoreGraphics.framework */; };
@@ -27,6 +29,11 @@
 		2D28DF5A17A1FF7600C0E49B /* DVSampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSampleViewController.h; sourceTree = "<group>"; };
 		2D28DF5B17A1FF7600C0E49B /* DVSampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVSampleViewController.m; sourceTree = "<group>"; };
 		2D28DF5C17A1FF7600C0E49B /* DVSampleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVSampleViewController.xib; sourceTree = "<group>"; };
+		2D889C9C17A9BAA100A4F0E6 /* DVButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVButtonCell.h; sourceTree = "<group>"; };
+		2D889C9D17A9BAA100A4F0E6 /* DVButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVButtonCell.m; sourceTree = "<group>"; };
+		2D889C9F17A9BAA100A4F0E6 /* DVButtonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVButtonObject.h; sourceTree = "<group>"; };
+		2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVButtonObject.m; sourceTree = "<group>"; };
+		2D889CA317A9BAA100A4F0E6 /* DVDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVDefinitions.h; sourceTree = "<group>"; };
 		2DD8D8E91799D9DF00538E90 /* DVFloatingWindow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DVFloatingWindow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DD8D8EC1799D9DF00538E90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2DD8D8EE1799D9DF00538E90 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -59,11 +66,24 @@
 		2D28DF5617A1FDC700C0E49B /* DVFloatingWindow */ = {
 			isa = PBXGroup;
 			children = (
+				2D889CA217A9BAA100A4F0E6 /* Files */,
 				2D28DF5717A1FE4500C0E49B /* DVFloatingWindow.h */,
 				2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */,
 			);
 			name = DVFloatingWindow;
 			path = ../DVFloatingWindow;
+			sourceTree = "<group>";
+		};
+		2D889CA217A9BAA100A4F0E6 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				2D889C9C17A9BAA100A4F0E6 /* DVButtonCell.h */,
+				2D889C9D17A9BAA100A4F0E6 /* DVButtonCell.m */,
+				2D889C9F17A9BAA100A4F0E6 /* DVButtonObject.h */,
+				2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */,
+				2D889CA317A9BAA100A4F0E6 /* DVDefinitions.h */,
+			);
+			name = Files;
 			sourceTree = "<group>";
 		};
 		2DD8D8E01799D9DE00538E90 = {
@@ -192,6 +212,8 @@
 				2DD8D8FD1799D9DF00538E90 /* DVAppDelegate.m in Sources */,
 				2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */,
 				2D28DF5D17A1FF7600C0E49B /* DVSampleViewController.m in Sources */,
+				2D889C9E17A9BAA100A4F0E6 /* DVButtonCell.m in Sources */,
+				2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
