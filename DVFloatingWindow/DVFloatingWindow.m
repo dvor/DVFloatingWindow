@@ -21,7 +21,7 @@
 @interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) UIView *topBorder;
+@property (strong, nonatomic) UILabel *topTitleLabel;
 @property (strong, nonatomic) UIView *bottomCorner;
 @property (strong, nonatomic) UIButton *nextButton;
 
@@ -110,9 +110,9 @@
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.nextButton.frame = frame;
 
-    frame = self.topBorder.frame;
+    frame = self.topTitleLabel.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
-    self.topBorder.frame = frame;
+    self.topTitleLabel.frame = frame;
 
     frame = self.bottomCorner.frame;
     frame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE - BORDER_SIZE;
@@ -120,13 +120,14 @@
     self.bottomCorner.frame = frame;
 }
 
+#pragma mark -  Methods tab
+
 - (void)tabShowNext
 {
     if (! self.dictWithLoggers.count) {
         return;
     }
-    NSArray *keys = [[self.dictWithLoggers allKeys]
-        sortedArrayUsingSelector:@selector(compare:)];
+    NSArray *keys = [self sortedLoggersKeys];
 
     if (self.areButtonsVisible) {
         self.visibleLoggerKey = keys[0];
@@ -143,6 +144,7 @@
         }
     }
 
+    [self updateTopTitleLabelText];
     [self.tableView reloadData];
 }
 
@@ -170,6 +172,7 @@
     }
 
     self.dictWithLoggers[key] = [NSMutableArray new];
+    [self updateTopTitleLabelText];
 }
 
 - (void)loggerClear:(NSString *)key
@@ -196,6 +199,7 @@
     }
 
     self.dictWithLoggers[key] = nil;
+    [self updateTopTitleLabelText];
 }
 
 - (void)loggerLog:(NSString *)string toLogger:(NSString *)key
@@ -230,8 +234,8 @@
 
 - (void)topBorderPanGesture:(UIPanGestureRecognizer *)recognizer
 {
-    CGPoint translation = [recognizer translationInView:self.topBorder];
-    [recognizer setTranslation:CGPointZero inView:self.topBorder];
+    CGPoint translation = [recognizer translationInView:self.topTitleLabel];
+    [recognizer setTranslation:CGPointZero inView:self.topTitleLabel];
 
     CGRect frame = self.frame;
     frame.origin.x += translation.x;
@@ -242,8 +246,8 @@
 
 - (void)bottomCornerPanGesture:(UIPanGestureRecognizer *)recognizer
 {
-    CGPoint translation = [recognizer translationInView:self.topBorder];
-    [recognizer setTranslation:CGPointZero inView:self.topBorder];
+    CGPoint translation = [recognizer translationInView:self.bottomCorner];
+    [recognizer setTranslation:CGPointZero inView:self.bottomCorner];
 
     CGRect frame = self.frame;
     frame.size.width += translation.x;
@@ -340,13 +344,18 @@
         frame.origin.x = frame.origin.y = BORDER_SIZE;
         frame.size.height = TOP_BORDER_HEIGHT;
 
-        self.topBorder = [[UIView alloc] initWithFrame:frame];
-        self.topBorder.backgroundColor = [UIColor greenColor];
-        [self addSubview:self.topBorder];
+        self.topTitleLabel = [[UILabel alloc] initWithFrame:frame];
+        self.topTitleLabel.userInteractionEnabled = YES;
+        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.font = [UIFont systemFontOfSize:13.0];
+        self.topTitleLabel.textColor = [UIColor blackColor];
+        self.topTitleLabel.textAlignment = NSTextAlignmentCenter;
+        self.topTitleLabel.text = @"<<Buttons>>";
+        [self addSubview:self.topTitleLabel];
 
         UIPanGestureRecognizer *topPanGR = [[UIPanGestureRecognizer alloc]
             initWithTarget:self action:@selector(topBorderPanGesture:)];
-        [self.topBorder addGestureRecognizer:topPanGR];
+        [self.topTitleLabel addGestureRecognizer:topPanGR];
     }
 
     {
@@ -360,6 +369,24 @@
         UIPanGestureRecognizer *bottomPanGR = [[UIPanGestureRecognizer alloc]
             initWithTarget:self action:@selector(bottomCornerPanGesture:)];
         [self.bottomCorner addGestureRecognizer:bottomPanGR];
+    }
+}
+
+- (NSArray *)sortedLoggersKeys
+{
+    return [[self.dictWithLoggers allKeys] sortedArrayUsingSelector:@selector(compare:)];
+}
+
+- (void)updateTopTitleLabelText
+{
+    if (self.areButtonsVisible) {
+        self.topTitleLabel.text = @"<<Buttons>>";
+    }
+    else {
+        NSArray *keys = [self sortedLoggersKeys];
+
+        self.topTitleLabel.text = [NSString stringWithFormat:@"%d <<%@>>",
+            [keys indexOfObject:self.visibleLoggerKey], self.visibleLoggerKey];
     }
 }
 
