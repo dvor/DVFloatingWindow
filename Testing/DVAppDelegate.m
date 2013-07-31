@@ -21,16 +21,34 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    [[DVFloatingWindow sharedInstance] windowShow];
+    DVFloatingWindow *fw = [DVFloatingWindow sharedInstance];
+    [fw windowShow];
     
     for (int i = 0; i < 20; i++) {
         NSString *title = [NSString stringWithFormat:@"title %d", i]; 
-        [[DVFloatingWindow sharedInstance] buttonAddWithTitle:title handler:^{
+        [fw buttonAddWithTitle:title handler:^{
             NSLog(@"---- %@", title);
         }];
     }
 
+    [fw loggerCreate:@"B"];
+    [fw loggerCreate:@"A"];
+
+    [fw loggerLog:@"SomeMessage" toLogger:@"B"];
+
+
+    [NSTimer scheduledTimerWithTimeInterval:1.0
+                                     target:self
+                                   selector:@selector(timerTicked)
+                                   userInfo:nil
+                                    repeats:YES];
     return YES;
+}
+
+- (void)timerTicked
+{
+    NSString *text = [NSString stringWithFormat:@"%@", [NSDate date]];
+    [[DVFloatingWindow sharedInstance] loggerLog:text toLogger:@"A"];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

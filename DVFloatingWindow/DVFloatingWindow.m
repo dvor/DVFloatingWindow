@@ -7,7 +7,6 @@
 //
 
 #import "DVFloatingWindow.h"
-#import "DVButtonCell.h"
 #import "DVButtonObject.h"
 
 #define BORDER_SIZE 2
@@ -24,8 +23,13 @@
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *topBorder;
 @property (strong, nonatomic) UIView *bottomCorner;
+@property (strong, nonatomic) UIButton *nextButton;
 
-@property (strong, nonatomic) NSMutableArray *arrayWithThings;
+@property (strong, nonatomic) NSMutableArray *arrayWithButtons;
+@property (strong, nonatomic) NSMutableDictionary *dictWithLoggers;
+
+@property (assign, nonatomic) BOOL areButtonsVisible;
+@property (strong, nonatomic) NSString *visibleLoggerKey;
 
 @end
 
@@ -47,7 +51,10 @@
         self.frame = CGRectMake(0, 100, 100, 100);
         self.backgroundColor = [UIColor lightGrayColor];
 
-        self.arrayWithThings = [NSMutableArray new];
+        self.arrayWithButtons = [NSMutableArray new];
+        self.dictWithLoggers = [NSMutableDictionary new];
+
+        self.areButtonsVisible = YES;
     }
 
     return self;
@@ -67,28 +74,6 @@
 }
 
 #pragma mark -  Methods
-
-- (void)windowShow
-{
-    if (! self.superview) {
-        id delegate = [UIApplication sharedApplication].delegate;
-        [[delegate window] addSubview:self];
-    }
-}
-
-- (void)windowHide
-{
-    [self removeFromSuperview];
-}
-
-- (void)buttonAddWithTitle:(NSString *)title
-                   handler:(DVFloatingWindowButtonHandler)handler
-{
-    DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
-
-    [self.arrayWithThings addObject:object];
-    [self.tableView reloadData];
-}
 
 - (void)setFrame:(CGRect)frame
 {
@@ -115,13 +100,15 @@
 
     [super setFrame:frame];
 
-    frame = CGRectZero;
-    frame.origin.x = BORDER_SIZE;
-    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
+    frame = self.tableView.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
-        2 * BORDER_SIZE;
+        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
     self.tableView.frame = frame;
+
+    frame = self.nextButton.frame;
+    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
+    self.nextButton.frame = frame;
 
     frame = self.topBorder.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
@@ -131,6 +118,112 @@
     frame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE - BORDER_SIZE;
     frame.origin.y = self.frame.size.height - BOTTOM_CORNER_SIZE - BORDER_SIZE;
     self.bottomCorner.frame = frame;
+}
+
+- (void)tabShowNext
+{
+    if (! self.dictWithLoggers.count) {
+        return;
+    }
+    NSArray *keys = [[self.dictWithLoggers allKeys]
+        sortedArrayUsingSelector:@selector(compare:)];
+
+    if (self.areButtonsVisible) {
+        self.visibleLoggerKey = keys[0];
+        self.areButtonsVisible = NO;
+    }
+    else {
+        NSUInteger index = 1 + [keys indexOfObject:self.visibleLoggerKey];
+
+        if (index < keys.count) {
+            self.visibleLoggerKey = keys[index];
+        }
+        else {
+            self.areButtonsVisible = YES;
+        }
+    }
+
+    [self.tableView reloadData];
+}
+
+#pragma mark -  Methods window
+
+- (void)windowShow
+{
+    if (! self.superview) {
+        id delegate = [UIApplication sharedApplication].delegate;
+        [[delegate window] addSubview:self];
+    }
+}
+
+- (void)windowHide
+{
+    [self removeFromSuperview];
+}
+
+#pragma mark -  Methods logger
+
+- (void)loggerCreate:(NSString *)key
+{
+    if (! [key isKindOfClass:[NSString class]] || self.dictWithLoggers[key]) {
+        return;
+    }
+
+    self.dictWithLoggers[key] = [NSMutableArray new];
+}
+
+- (void)loggerClear:(NSString *)key
+{
+    if (! [key isKindOfClass:[NSString class]] || ! self.dictWithLoggers[key]) {
+        return;
+    }
+
+    self.dictWithLoggers[key] = [NSMutableArray new];
+
+    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+        [self.tableView reloadData];
+    }
+}
+
+- (void)loggerRemove:(NSString *)key
+{
+    if (! [key isKindOfClass:[NSString class]] || ! self.dictWithLoggers[key]) {
+        return;
+    }
+
+    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+        [self tabShowNext];
+    }
+
+    self.dictWithLoggers[key] = nil;
+}
+
+- (void)loggerLog:(NSString *)string toLogger:(NSString *)key
+{
+    if (! [string isKindOfClass:[NSString class]] ||
+        ! [key isKindOfClass:[NSString class]] || 
+        ! self.dictWithLoggers[key]) 
+    {
+        return;
+    }
+
+    NSMutableArray *array = self.dictWithLoggers[key];
+    [array addObject:string];
+
+    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+        [self.tableView reloadData];
+    }
+}
+
+#pragma mark -  Methods button
+
+- (void)buttonAddWithTitle:(NSString *)title
+                   handler:(DVFloatingWindowButtonHandler)handler
+{
+    DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
+
+    [self.arrayWithButtons addObject:object];
+    [self.tableView reloadData];
 }
 
 #pragma mark -  Gestures
@@ -164,16 +257,22 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *buttonIdentifier = @"DVButtonCell";
-    DVButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:buttonIdentifier];
+    NSString *buttonIdentifier = @"DVFloatingWindowCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:buttonIdentifier];
 
     if (! cell) {
-        cell = [[DVButtonCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                   reuseIdentifier:buttonIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:buttonIdentifier];
     }
 
-    DVButtonObject *object = self.arrayWithThings[indexPath.row];
-    cell.textLabel.text = object.name;
+    if (self.areButtonsVisible) {
+        DVButtonObject *object = self.arrayWithButtons[indexPath.row];
+        cell.textLabel.text = object.name;
+    }
+    else {
+        NSArray *array = self.dictWithLoggers[self.visibleLoggerKey];
+        cell.textLabel.text = array[indexPath.row];
+    }
 
     return cell;
 }
@@ -181,7 +280,13 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    return self.arrayWithThings.count;
+    if (self.areButtonsVisible) {
+        return self.arrayWithButtons.count;
+    }
+    else {
+        NSArray *array = self.dictWithLoggers[self.visibleLoggerKey];
+        return array.count;
+    }
 }
 
 #pragma mark -  UITableView delegate
@@ -189,13 +294,17 @@
 - (void)       tableView:(UITableView *)tableView
  didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row >= self.arrayWithThings.count) {
-        return;
-    }
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    DVButtonObject *object = self.arrayWithThings[indexPath.row];
-    if (object.handler) {
-        object.handler();
+    if (self.areButtonsVisible) {
+        if (indexPath.row >= self.arrayWithButtons.count) {
+            return;
+        }
+
+        DVButtonObject *object = self.arrayWithButtons[indexPath.row];
+        if (object.handler) {
+            object.handler();
+        }
     }
 }
 
@@ -204,10 +313,26 @@
 - (void)createSubviews
 {
     {
-        self.tableView = [UITableView new];
+        CGRect frame = CGRectZero;
+        frame.origin.x = BORDER_SIZE;
+        frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
+
+        self.tableView = [[UITableView alloc] initWithFrame:frame];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
         [self addSubview:self.tableView];
+    }
+
+    {
+        self.nextButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        [self.nextButton addTarget:self
+                            action:@selector(tabShowNext)
+                  forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.nextButton];
+
+        CGRect frame = self.nextButton.frame;
+        frame.origin.x = BORDER_SIZE;
+        self.nextButton.frame = frame;
     }
 
     {

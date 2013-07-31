@@ -16,6 +16,13 @@
 - (void)windowShow;
 - (void)windowHide;
 
+- (void)tabShowNext;
+
+- (void)loggerCreate:(NSString *)key;
+- (void)loggerClear:(NSString *)key;
+- (void)loggerRemove:(NSString *)key;
+- (void)loggerLog:(NSString *)string toLogger:(NSString *)key;
+
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;
 
