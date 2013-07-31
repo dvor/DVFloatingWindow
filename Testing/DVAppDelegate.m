@@ -21,11 +21,11 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    [[DVFloatingWindow sharedInstance] show];
+    [[DVFloatingWindow sharedInstance] windowShow];
     
     for (int i = 0; i < 20; i++) {
         NSString *title = [NSString stringWithFormat:@"title %d", i]; 
-        [[DVFloatingWindow sharedInstance] addButtonWithTitle:title handler:^{
+        [[DVFloatingWindow sharedInstance] buttonAddWithTitle:title handler:^{
             NSLog(@"---- %@", title);
         }];
     }

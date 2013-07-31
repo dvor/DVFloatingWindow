@@ -13,10 +13,10 @@
 
 + (DVFloatingWindow *)sharedInstance;
 
-- (void)show;
-- (void)hide;
+- (void)windowShow;
+- (void)windowHide;
 
-- (void)addButtonWithTitle:(NSString *)title
+- (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;
 
 @end

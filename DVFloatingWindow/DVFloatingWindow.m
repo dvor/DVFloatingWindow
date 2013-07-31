@@ -68,7 +68,7 @@
 
 #pragma mark -  Methods
 
-- (void)show
+- (void)windowShow
 {
     if (! self.superview) {
         id delegate = [UIApplication sharedApplication].delegate;
@@ -76,12 +76,12 @@
     }
 }
 
-- (void)hide
+- (void)windowHide
 {
     [self removeFromSuperview];
 }
 
-- (void)addButtonWithTitle:(NSString *)title
+- (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler
 {
     DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
