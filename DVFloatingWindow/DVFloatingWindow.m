@@ -289,12 +289,20 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *buttonIdentifier = @"DVFloatingWindowCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:buttonIdentifier];
+    NSString *identifier = self.areButtonsVisible ? @"DVButtonCell" : @"DVLoggerCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
 
     if (! cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                      reuseIdentifier:buttonIdentifier];
+                                      reuseIdentifier:identifier];
+
+        if (self.areButtonsVisible) {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        else {
+            cell.textLabel.font = [UIFont systemFontOfSize:10.0];
+            cell.textLabel.numberOfLines = 0;
+        }
     }
 
     if (self.areButtonsVisible) {
@@ -323,8 +331,7 @@
 
 #pragma mark -  UITableView delegate
 
-- (void)       tableView:(UITableView *)tableView
- didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
@@ -338,6 +345,26 @@
             object.handler();
         }
     }
+}
+
+- (CGFloat)    tableView:(UITableView *)tableView
+ heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 0.0;
+
+    if (self.areButtonsVisible) {
+        height = 44.0;
+    }
+    else {
+        NSArray *array = self.dictWithLoggers[self.visibleLoggerKey];
+        NSString *text = array[indexPath.row];
+
+        CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:10.0]
+                       constrainedToSize:CGSizeMake(300.0, CGFLOAT_MAX)];
+        height = size.height + 2;
+    }
+
+    return height;
 }
 
 #pragma mark -  Supporting methods

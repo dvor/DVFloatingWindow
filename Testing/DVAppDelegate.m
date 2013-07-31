@@ -35,6 +35,7 @@
     [fw loggerCreate:@"A"];
 
     [fw loggerLog:@"SomeMessage" toLogger:@"B"];
+    [fw loggerLog:@"fksadfjkasdfjksadkfaksdfklasdjkf jasdjfkajdsfj asdjf ajdksfj; adsj;fkja kdsfkadjsk fjkadjsf jsadfj; aje;lfakwjfawi fijadsfk djsakfjkadsfk aksfk asdjkfjak sdfjk asdklfjklasdjfkjasdkfjk asdflkjasdkfk adjskfadskf kalsdfjk sdkfj kSomeMessage" toLogger:@"B"];
 
 
     [NSTimer scheduledTimerWithTimeInterval:1.0
