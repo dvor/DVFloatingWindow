@@ -31,6 +31,8 @@
 @property (assign, nonatomic) BOOL areButtonsVisible;
 @property (strong, nonatomic) NSString *visibleLoggerKey;
 
+@property (strong, nonatomic) UIGestureRecognizer *activateRecognizer;
+
 @end
 
 
@@ -120,6 +122,43 @@
     self.bottomCorner.frame = frame;
 }
 
+#pragma mark -  Methods window
+
+- (void)windowShow
+{
+    if (! self.superview) {
+        id delegate = [UIApplication sharedApplication].delegate;
+        [[delegate window] addSubview:self];
+    }
+}
+
+- (void)windowHide
+{
+    [self removeFromSuperview];
+}
+
+- (void)windowActivationTapWithTouchesNumber:(NSUInteger)touchesNumber
+{
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
+        initWithTarget:self action:@selector(activateGesture:)];
+
+    recognizer.numberOfTouchesRequired = touchesNumber;
+
+    [self updateActivationGestureRecognizer:recognizer];
+}
+
+- (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
+                              minimumPressDuration:(CFTimeInterval)minimumPressDuration
+{
+    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc]
+        initWithTarget:self action:@selector(activateGesture:)];
+
+    recognizer.numberOfTouchesRequired = touchesNumber;
+    recognizer.minimumPressDuration = minimumPressDuration;
+
+    [self updateActivationGestureRecognizer:recognizer];
+}
+
 #pragma mark -  Methods tab
 
 - (void)tabShowNext
@@ -146,21 +185,6 @@
 
     [self updateTopTitleLabelText];
     [self.tableView reloadData];
-}
-
-#pragma mark -  Methods window
-
-- (void)windowShow
-{
-    if (! self.superview) {
-        id delegate = [UIApplication sharedApplication].delegate;
-        [[delegate window] addSubview:self];
-    }
-}
-
-- (void)windowHide
-{
-    [self removeFromSuperview];
 }
 
 #pragma mark -  Methods logger
@@ -231,6 +255,20 @@
 }
 
 #pragma mark -  Gestures
+
+- (void)activateGesture:(UIGestureRecognizer *)recognizer
+{
+    if (recognizer.state != UIGestureRecognizerStateEnded) {
+        return;
+    }
+
+    if (self.superview) {
+        [self windowHide];
+    }
+    else {
+        [self windowShow];
+    }
+}
 
 - (void)topBorderPanGesture:(UIPanGestureRecognizer *)recognizer
 {
@@ -370,6 +408,19 @@
             initWithTarget:self action:@selector(bottomCornerPanGesture:)];
         [self.bottomCorner addGestureRecognizer:bottomPanGR];
     }
+}
+
+- (void)updateActivationGestureRecognizer:(UIGestureRecognizer *)recognizer
+{
+    id delegate = [UIApplication sharedApplication].delegate;
+    UIWindow *window = [delegate window];
+
+    if (self.activateRecognizer) {
+        [window removeGestureRecognizer:self.activateRecognizer];
+    }
+
+    [window addGestureRecognizer:recognizer];
+    self.activateRecognizer = recognizer;
 }
 
 - (NSArray *)sortedLoggersKeys

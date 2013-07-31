@@ -22,7 +22,7 @@
     [self.window makeKeyAndVisible];
 
     DVFloatingWindow *fw = [DVFloatingWindow sharedInstance];
-    [fw windowShow];
+    [fw windowActivationLongPressWithTouchesNumber:1 minimumPressDuration:1.0];
     
     for (int i = 0; i < 20; i++) {
         NSString *title = [NSString stringWithFormat:@"title %d", i]; 

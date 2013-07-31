@@ -15,6 +15,9 @@
 
 - (void)windowShow;
 - (void)windowHide;
+- (void)windowActivationTapWithTouchesNumber:(NSUInteger)touchesNumber;
+- (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
+                              minimumPressDuration:(CFTimeInterval)minimumPressDuration;
 
 - (void)tabShowNext;
 
