@@ -23,6 +23,7 @@
 
     DVFloatingWindow *fw = [DVFloatingWindow sharedInstance];
     [fw windowActivationLongPressWithTouchesNumber:1 minimumPressDuration:1.0];
+    [fw windowShow];
     
     for (int i = 0; i < 20; i++) {
         NSString *title = [NSString stringWithFormat:@"title %d", i]; 
@@ -37,6 +38,19 @@
     [fw loggerLog:@"SomeMessage" toLogger:@"B"];
     [fw loggerLog:@"fksadfjkasdfjksadkfaksdfklasdjkf jasdjfkajdsfj asdjf ajdksfj; adsj;fkja kdsfkadjsk fjkadjsf jsadfj; aje;lfakwjfawi fijadsfk djsakfjkadsfk aksfk asdjkfjak sdfjk asdklfjklasdjfkjasdkfjk asdflkjasdkfk adjskfadskf kalsdfjk sdkfj kSomeMessage" toLogger:@"B"];
 
+    DVLoggerConfiguration *configuration = [DVLoggerConfiguration
+        configurationWithLatestMessageOnTop:YES
+                         scrollToNewMessage:YES
+                                       font:[UIFont systemFontOfSize:15.0]];
+
+    [fw loggerSetConfiguration:configuration forLogger:@"A"];
+
+    configuration = [DVLoggerConfiguration
+        configurationWithLatestMessageOnTop:YES
+                         scrollToNewMessage:NO
+                                       font:[UIFont systemFontOfSize:18.0]];
+
+    [fw loggerSetConfiguration:configuration forLogger:@"B"];
 
     [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self

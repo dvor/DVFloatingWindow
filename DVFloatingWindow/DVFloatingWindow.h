@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DVDefinitions.h"
+#import "DVLoggerConfiguration.h"
 
 @interface DVFloatingWindow : UIView
 
@@ -25,6 +26,8 @@
 - (void)loggerCreate:(NSString *)key;
 - (void)loggerClear:(NSString *)key;
 - (void)loggerRemove:(NSString *)key;
+- (void)loggerSetConfiguration:(DVLoggerConfiguration *)configuration
+                     forLogger:(NSString *)key;
 - (void)loggerLog:(NSString *)string toLogger:(NSString *)key;
 
 - (void)buttonAddWithTitle:(NSString *)title

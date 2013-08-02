@@ -7,6 +7,7 @@
 //
 
 #import "DVFloatingWindow.h"
+#import "DVLogger.h"
 #import "DVButtonObject.h"
 
 #define BORDER_SIZE 2
@@ -185,7 +186,7 @@
         return;
     }
 
-    self.dictWithLoggers[key] = [NSMutableArray new];
+    self.dictWithLoggers[key] = [DVLogger loggerWithDefaultConfiguration];
     [self updateTopTitleLabelText];
 }
 
@@ -195,7 +196,8 @@
         return;
     }
 
-    self.dictWithLoggers[key] = [NSMutableArray new];
+    DVLogger *logger = self.dictWithLoggers[key];
+    [logger removeAllLogs];
 
     if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
         [self.tableView reloadData];
@@ -216,6 +218,20 @@
     [self updateTopTitleLabelText];
 }
 
+- (void)loggerSetConfiguration:(DVLoggerConfiguration *)configuration
+                     forLogger:(NSString *)key
+{
+    if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
+        ! [key isKindOfClass:[NSString class]] || 
+        ! self.dictWithLoggers[key]) 
+    {
+        return;
+    }
+
+    DVLogger *logger = self.dictWithLoggers[key];
+    logger.configuration = configuration;
+}
+
 - (void)loggerLog:(NSString *)string toLogger:(NSString *)key
 {
     if (! [string isKindOfClass:[NSString class]] ||
@@ -225,11 +241,22 @@
         return;
     }
 
-    NSMutableArray *array = self.dictWithLoggers[key];
-    [array addObject:string];
+    DVLogger *logger = self.dictWithLoggers[key];
+    NSUInteger newIndex = [logger addLog:string];
 
     if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self.tableView reloadData];
+        NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
+        [self.tableView insertRowsAtIndexPaths:@[path]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        if (logger.configuration.scrollToNewMessage) {
+            UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
+                UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
+
+            [self.tableView scrollToRowAtIndexPath:path
+                                  atScrollPosition:scrollPosition
+                                          animated:YES];
+        }
     }
 }
 
@@ -300,7 +327,6 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
         else {
-            cell.textLabel.font = [UIFont systemFontOfSize:10.0];
             cell.textLabel.numberOfLines = 0;
         }
     }
@@ -310,8 +336,9 @@
         cell.textLabel.text = object.name;
     }
     else {
-        NSArray *array = self.dictWithLoggers[self.visibleLoggerKey];
-        cell.textLabel.text = array[indexPath.row];
+        DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+        cell.textLabel.text = [logger logAtIndex:indexPath.row];
+        cell.textLabel.font = logger.configuration.font;
     }
 
     return cell;
@@ -324,8 +351,8 @@
         return self.arrayWithButtons.count;
     }
     else {
-        NSArray *array = self.dictWithLoggers[self.visibleLoggerKey];
-        return array.count;
+        DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+        return logger.count;
     }
 }
 
@@ -356,10 +383,10 @@
         height = 44.0;
     }
     else {
-        NSArray *array = self.dictWithLoggers[self.visibleLoggerKey];
-        NSString *text = array[indexPath.row];
+        DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+        NSString *text = [logger logAtIndex:indexPath.row];
 
-        CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:10.0]
+        CGSize size = [text sizeWithFont:logger.configuration.font
                        constrainedToSize:CGSizeMake(300.0, CGFLOAT_MAX)];
         height = size.height + 2;
     }
