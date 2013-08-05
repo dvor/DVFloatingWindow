@@ -218,8 +218,8 @@
     [self updateTopTitleLabelText];
 }
 
-- (void)loggerSetConfiguration:(DVLoggerConfiguration *)configuration
-                     forLogger:(NSString *)key
+- (void)loggerSetConfigurationForLogger:(NSString *)key
+                          configuration:(DVLoggerConfiguration *)configuration
 {
     if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
         ! [key isKindOfClass:[NSString class]] || 
@@ -232,7 +232,7 @@
     logger.configuration = configuration;
 }
 
-- (void)loggerLog:(NSString *)string toLogger:(NSString *)key
+- (void)loggerLogToLogger:(NSString *)key log:(NSString *)string
 {
     if (! [string isKindOfClass:[NSString class]] ||
         ! [key isKindOfClass:[NSString class]] || 

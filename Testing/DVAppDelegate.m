@@ -44,14 +44,14 @@
                          scrollToNewMessage:YES
                                        font:[UIFont systemFontOfSize:15.0]];
 
-    [fw loggerSetConfiguration:configuration forLogger:@"A"];
+    [fw loggerSetConfigurationForLogger:@"A" configuration:configuration];
 
     configuration = [DVLoggerConfiguration
         configurationWithLatestMessageOnTop:YES
                          scrollToNewMessage:NO
                                        font:[UIFont systemFontOfSize:18.0]];
 
-    [fw loggerSetConfiguration:configuration forLogger:@"B"];
+    [fw loggerSetConfigurationForLogger:@"B" configuration:configuration];
 
     [NSTimer scheduledTimerWithTimeInterval:1.0
                                      target:self

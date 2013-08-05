@@ -27,9 +27,10 @@
 - (void)loggerCreate:(NSString *)key;
 - (void)loggerClear:(NSString *)key;
 - (void)loggerRemove:(NSString *)key;
-- (void)loggerSetConfiguration:(DVLoggerConfiguration *)configuration
-                     forLogger:(NSString *)key;
-- (void)loggerLog:(NSString *)string toLogger:(NSString *)key;
+- (void)loggerSetConfigurationForLogger:(NSString *)key
+                          configuration:(DVLoggerConfiguration *)configuration;
+
+- (void)loggerLogToLogger:(NSString *)key log:(NSString *)string;
 
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;

@@ -25,7 +25,7 @@
 #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
 #define DVLoggerRemove(key) [[DVFloatingWindow sharedInstance] loggerRemove:key]
 #define DVLoggerLog(loggerKey, string) [[DVFloatingWindow sharedInstance] \
-    loggerLog:string toLogger:loggerKey]
+    loggerLogToLogger:loggerKey log:string]
 
 #define DVLLog(loggerKey, string) DVLoggerLog(loggerKey, string)
 
