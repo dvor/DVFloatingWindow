@@ -25,8 +25,8 @@
          [[DVFloatingWindow sharedInstance] windowActivationLongPressWithTouchesNumber:touchesNumber \
                                                                   minimumPressDuration:minPressDuration]
      
-     #define DVTapNext [[DVFloatingWindow sharedInstance] tabShowPrevious]
-     #define DVTabPrevious [[DVFloatingWindow sharedInstance] tabShowNext]
+     #define DVTapPrevious [[DVFloatingWindow sharedInstance] tabShowPrevious]
+     #define DVTabNext [[DVFloatingWindow sharedInstance] tabShowNext]
      
      #define DVLoggerCreate(key) [[DVFloatingWindow sharedInstance] loggerCreate:key]
      #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
