@@ -9,10 +9,15 @@
 #ifndef DVFloatingWindow_DVMacros_h
 #define DVFloatingWindow_DVMacros_h
 
+#define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) \
+    [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
+                                            scrollToNewMessage:scrollToNew \
+                                                          font:theFont]
+
 #define DVWindowShow() [[DVFloatingWindow sharedInstance] windowShow]
 #define DVWindowHide() [[DVFloatingWindow sharedInstance] windowHide]
-#define DVWindowActivationTap(touchesNumber) [[DVFloatingWindow sharedInstance] \
-                                      windowActivationTapWithTouchesNumber:touchesNumber]
+#define DVWindowActivationTap(touchesNumber) \
+     [[DVFloatingWindow sharedInstance] windowActivationTapWithTouchesNumber:touchesNumber]
 
 #define DVWindowActivationLongPress(touchesNumber, minPressDuration) \
     [[DVFloatingWindow sharedInstance] windowActivationLongPressWithTouchesNumber:touchesNumber \
@@ -24,8 +29,13 @@
 #define DVLoggerCreate(key) [[DVFloatingWindow sharedInstance] loggerCreate:key]
 #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
 #define DVLoggerRemove(key) [[DVFloatingWindow sharedInstance] loggerRemove:key]
-#define DVLoggerLog(loggerKey, format, ...) [[DVFloatingWindow sharedInstance] \
-    loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
+
+#define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) \
+    [[DVFloatingWindow sharedInstance] loggerSetConfigurationForLogger:loggerKey \
+                                                         configuration:__DVLoggerConfiguration(latestMessageOnTop, scrollToNewMessage, font)]
+
+#define DVLoggerLog(loggerKey, format, ...) \
+     [[DVFloatingWindow sharedInstance] loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
 
 #define DVLLog(loggerKey, format, ...) DVLoggerLog(loggerKey, format, ##__VA_ARGS__)
 #define DVLog(format, ...) DVLoggerLog(@"Default", format, ##__VA_ARGS__)
