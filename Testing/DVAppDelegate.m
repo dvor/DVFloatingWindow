@@ -7,8 +7,8 @@
 //
 
 #import "DVAppDelegate.h"
-#import "DVFloatingWindow.h"
 #import "DVSampleViewController.h"
+#import "DVFloatingWindow.h"
 
 @implementation DVAppDelegate
 
@@ -21,39 +21,9 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    DVWindowShow();
     DVWindowActivationLongPress(1, 0.5);
 
-    DVFloatingWindow *fw = [DVFloatingWindow sharedInstance];
-    
-    for (int i = 0; i < 20; i++) {
-        NSString *title = [NSString stringWithFormat:@"title %d", i]; 
-        [fw buttonAddWithTitle:title handler:^{
-            NSLog(@"---- %@", title);
-        }];
-    }
-
-    DVLoggerCreate(@"A");
-    DVLoggerCreate(@"B");
-
-    DVLLog(@"B", @"Some message");
-    DVLLog(@"B", @"fksadfjkasdfjksadkfaksdfklasdjkf jasdjfkajdsfj asdjf ajdksfj; adsj;fkja kdsfkadjsk fjkadjsf jsadfj; aje;lfakwjfawi fijadsfk djsakfjkadsfk aksfk asdjkfjak sdfjk asdklfjklasdjfkjasdkfjk asdflkjasdkfk adjskfadskf kalsdfjk sdkfj kSomeMessage");
-
-    DVLoggerSetConfiguration(@"A", YES, YES, [UIFont systemFontOfSize:15.0]);
-    DVLoggerSetConfiguration(@"B", YES, NO, [UIFont systemFontOfSize:18.0]);
-
-    [NSTimer scheduledTimerWithTimeInterval:1.0
-                                     target:self
-                                   selector:@selector(timerTicked)
-                                   userInfo:nil
-                                    repeats:YES];
     return YES;
-}
-
-- (void)timerTicked
-{
-    DVLLog(@"A", @"%@", [NSDate date]);
-    DVLog(@"Some nice log %f", [[NSDate date] timeIntervalSince1970]);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

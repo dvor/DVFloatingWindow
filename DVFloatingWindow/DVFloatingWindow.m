@@ -231,6 +231,10 @@
 
     DVLogger *logger = self.dictWithLoggers[key];
     logger.configuration = configuration;
+
+    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+        [self.tableView reloadData];
+    }
 }
 
 - (void)loggerLogToLogger:(NSString *)key

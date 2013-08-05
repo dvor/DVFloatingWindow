@@ -7,32 +7,62 @@
 //
 
 #import "DVSampleViewController.h"
+#import "DVFloatingWindow.h"
 
 @interface DVSampleViewController ()
+
+@property (weak, nonatomic) IBOutlet UILabel *defaultFontSizeLabel;
+@property (weak, nonatomic) IBOutlet UISlider *defaultFontSizeSlider;
 
 @end
 
 @implementation DVSampleViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+#pragma mark -  Lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+
+    [self.defaultFontSizeSlider setValue:0.3 animated:NO];
+    [self defaultLoggerSliderChanged:self.defaultFontSizeSlider];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewDidUnload 
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [self setDefaultFontSizeSlider:nil];
+    [self setDefaultFontSizeLabel:nil];
+    [super viewDidUnload];
 }
+
+#pragma mark -  Methods
+
+- (IBAction)logDateToDefaultLoggerButtonPressed:(id)sender 
+{
+    DVLog(@"%@", [NSDate date]);
+}
+
+- (IBAction)defaultLoggerSliderChanged:(id)sender 
+{
+    CGFloat fontSize = 10.0 + self.defaultFontSizeSlider.value * 10;
+    UIFont *font = [UIFont systemFontOfSize:fontSize];
+
+    DVLoggerSetConfiguration(@"Default", NO, YES, font);
+
+    self.defaultFontSizeLabel.text = [NSString stringWithFormat:@"%d", (int)fontSize];
+}
+
+- (IBAction)createButtonThatChangesColor:(id)sender 
+{
+    UIColor *randomColor = [UIColor colorWithRed:arc4random() % 256 / 256.0
+                                           green:arc4random() % 256 / 256.0
+                                            blue:arc4random() % 256 / 256.0
+                                           alpha:1.0];
+
+    [[DVFloatingWindow sharedInstance] buttonAddWithTitle:@"Change color" handler:^{
+        self.view.backgroundColor = randomColor;
+    }];
+}
+
 
 @end
