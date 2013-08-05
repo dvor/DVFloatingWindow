@@ -21,9 +21,10 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
+    DVWindowShow();
+    DVWindowActivationLongPress(1, 0.5);
+
     DVFloatingWindow *fw = [DVFloatingWindow sharedInstance];
-    [fw windowActivationLongPressWithTouchesNumber:1 minimumPressDuration:1.0];
-    [fw windowShow];
     
     for (int i = 0; i < 20; i++) {
         NSString *title = [NSString stringWithFormat:@"title %d", i]; 
@@ -32,11 +33,11 @@
         }];
     }
 
-    [fw loggerCreate:@"B"];
-    [fw loggerCreate:@"A"];
+    DVLoggerCreate(@"A");
+    DVLoggerCreate(@"B");
 
-    [fw loggerLog:@"SomeMessage" toLogger:@"B"];
-    [fw loggerLog:@"fksadfjkasdfjksadkfaksdfklasdjkf jasdjfkajdsfj asdjf ajdksfj; adsj;fkja kdsfkadjsk fjkadjsf jsadfj; aje;lfakwjfawi fijadsfk djsakfjkadsfk aksfk asdjkfjak sdfjk asdklfjklasdjfkjasdkfjk asdflkjasdkfk adjskfadskf kalsdfjk sdkfj kSomeMessage" toLogger:@"B"];
+    DVLLog(@"B", @"Some message");
+    DVLLog(@"B", @"fksadfjkasdfjksadkfaksdfklasdjkf jasdjfkajdsfj asdjf ajdksfj; adsj;fkja kdsfkadjsk fjkadjsf jsadfj; aje;lfakwjfawi fijadsfk djsakfjkadsfk aksfk asdjkfjak sdfjk asdklfjklasdjfkjasdkfjk asdflkjasdkfk adjskfadskf kalsdfjk sdkfj kSomeMessage");
 
     DVLoggerConfiguration *configuration = [DVLoggerConfiguration
         configurationWithLatestMessageOnTop:YES
@@ -63,7 +64,7 @@
 - (void)timerTicked
 {
     NSString *text = [NSString stringWithFormat:@"%@", [NSDate date]];
-    [[DVFloatingWindow sharedInstance] loggerLog:text toLogger:@"A"];
+    DVLLog(@"A", text);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

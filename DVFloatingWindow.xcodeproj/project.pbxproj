@@ -30,6 +30,7 @@
 		2D28DF5A17A1FF7600C0E49B /* DVSampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSampleViewController.h; sourceTree = "<group>"; };
 		2D28DF5B17A1FF7600C0E49B /* DVSampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVSampleViewController.m; sourceTree = "<group>"; };
 		2D28DF5C17A1FF7600C0E49B /* DVSampleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVSampleViewController.xib; sourceTree = "<group>"; };
+		2D821CDE17B04B9C00E4B602 /* DVMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVMacros.h; sourceTree = "<group>"; };
 		2D889C9F17A9BAA100A4F0E6 /* DVButtonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVButtonObject.h; sourceTree = "<group>"; };
 		2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVButtonObject.m; sourceTree = "<group>"; };
 		2D889CA317A9BAA100A4F0E6 /* DVDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVDefinitions.h; sourceTree = "<group>"; };
@@ -69,9 +70,10 @@
 		2D28DF5617A1FDC700C0E49B /* DVFloatingWindow */ = {
 			isa = PBXGroup;
 			children = (
-				2D889CA217A9BAA100A4F0E6 /* Files */,
 				2D28DF5717A1FE4500C0E49B /* DVFloatingWindow.h */,
 				2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */,
+				2D821CDE17B04B9C00E4B602 /* DVMacros.h */,
+				2D889CA217A9BAA100A4F0E6 /* Files */,
 			);
 			name = DVFloatingWindow;
 			path = ../DVFloatingWindow;

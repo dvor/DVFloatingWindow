@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DVDefinitions.h"
 #import "DVLoggerConfiguration.h"
+#import "DVMacros.h"
 
 @interface DVFloatingWindow : UIView
 
