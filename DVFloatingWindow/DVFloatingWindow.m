@@ -72,6 +72,7 @@
     @synchronized(self) {
         if (! window) {
             window = [[DVFloatingWindow alloc] initPrivate];
+            [window loggerCreate:@"Default"];
         }
     }
 

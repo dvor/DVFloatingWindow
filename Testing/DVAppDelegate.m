@@ -64,6 +64,7 @@
 - (void)timerTicked
 {
     DVLLog(@"A", @"%@", [NSDate date]);
+    DVLog(@"Some nice log %f", [[NSDate date] timeIntervalSince1970]);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

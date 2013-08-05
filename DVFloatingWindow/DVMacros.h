@@ -28,6 +28,7 @@
     loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
 
 #define DVLLog(loggerKey, format, ...) DVLoggerLog(loggerKey, format, ##__VA_ARGS__)
+#define DVLog(format, ...) DVLoggerLog(@"Default", format, ##__VA_ARGS__)
 
 
 #endif
