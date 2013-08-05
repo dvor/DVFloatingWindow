@@ -30,7 +30,8 @@
 - (void)loggerSetConfigurationForLogger:(NSString *)key
                           configuration:(DVLoggerConfiguration *)configuration;
 
-- (void)loggerLogToLogger:(NSString *)key log:(NSString *)string;
+- (void)loggerLogToLogger:(NSString *)key
+                      log:(NSString *)format,...;
 
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;

@@ -232,17 +232,23 @@
     logger.configuration = configuration;
 }
 
-- (void)loggerLogToLogger:(NSString *)key log:(NSString *)string
+- (void)loggerLogToLogger:(NSString *)key
+                      log:(NSString *)format,...
 {
-    if (! [string isKindOfClass:[NSString class]] ||
+    if (! [format isKindOfClass:[NSString class]] ||
         ! [key isKindOfClass:[NSString class]] || 
         ! self.dictWithLoggers[key]) 
     {
         return;
     }
 
+    va_list argList;
+    va_start (argList, format);
+    NSString *log = [[NSString alloc] initWithFormat:format arguments:argList];
+    va_end(argList);
+
     DVLogger *logger = self.dictWithLoggers[key];
-    NSUInteger newIndex = [logger addLog:string];
+    NSUInteger newIndex = [logger addLog:log];
 
     if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
         NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];

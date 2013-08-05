@@ -63,8 +63,7 @@
 
 - (void)timerTicked
 {
-    NSString *text = [NSString stringWithFormat:@"%@", [NSDate date]];
-    DVLLog(@"A", text);
+    DVLLog(@"A", @"%@", [NSDate date]);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
