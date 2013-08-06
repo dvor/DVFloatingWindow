@@ -17,113 +17,113 @@
 
 
 /**
- * Show window if it was hidden.
+ * Show the window if it's hidden.
  *
- * Corresponding macro if DVWindowShow()
+ * Corresponding macro - DVWindowShow()
  */
 - (void)windowShow;
 
 /**
- * Hides window if it was visible.
+ * Hide the window if it's visible.
  *
- * Corresponding macro is DVWindowHide()
+ * Corresponding macro - DVWindowHide()
  */
 - (void)windowHide;
 
 /**
- * Set tap gesture recognizer as activation gesture. From now on tap with touchesNumber
- * the window will show/hide automatically.
+ * Set tap gesture recognizer as an activation gesture. From now on, when tapped with
+ * touchesNumber, the window will show/hide automatically.
  * 
- * Rewrites activation gesture that was set before.
+ * Rewrite activation gesture that has been set before.
  *
- * Corresponding macro is DVWindowActivationTap(touchesNumber)
+ * Corresponding macro - DVWindowActivationTap(touchesNumber)
  */
 - (void)windowActivationTapWithTouchesNumber:(NSUInteger)touchesNumber;
 
 /**
- * Set long press gesture recognizer as activation gesture. From now on long press with
- * touchesNumber and at least minimumPressDuration the window will show/hide automatically.
+ * Set long press gesture recognizer as an activation gesture. From now on, long pressed 
+ * with touchesNumber and at least minimumPressDuration, the window will show/hide
+ * automatically.
  * 
- * Rewrites activation gesture that was set before.
+ * Rewrite activation gesture that has been set before.
  *
- * Corresponding macro is DVWindowActivationLongPress(touchesNumber, minimumPressDuration)
+ * Corresponding macro - DVWindowActivationLongPress(touchesNumber, minimumPressDuration)
  */
 - (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
                               minimumPressDuration:(CFTimeInterval)minimumPressDuration;
 
 
 /**
- * Switch to previous or next tabs. The action is similar to manual previous tab button press.
+ * Switch to previous or next tabs. This action is similar to pressing previous/next
+ * buttons manually.
  *
- * Corresponding macros are DVTabPrevious() and DVTabNext()
+ * Corresponding macros - DVTabPrevious(), DVTabNext()
  */
 - (void)tabShowPrevious;
 - (void)tabShowNext;
 
 
 /**
- * Create logger with NSString as key (identifier). Only after creation logger can be 
- * configured, cleared, removed, the log can be send to it.
+ * Create logger with NSString as a key (identifier). Only after logger was created it can
+ * be configured, cleared, removed or receive a sent log.
  *
- * Corresponding macro is DVLoggerCreate(loggerKey)
+ * Corresponding macro - DVLoggerCreate(loggerKey)
  */
 - (void)loggerCreate:(NSString *)loggerKey;
 
 /**
- * Removes all logs that were logged to logger.
+ * Remove all logs that from logger.
  *
- * If the logger doesn't exist nothing happens.
+ * If logger doesn't exist nothing happens.
  *
- * Corresponding macro is DVLoggerClear(loggerKey)
+ * Corresponding macro - DVLoggerClear(loggerKey)
  */
 - (void)loggerClear:(NSString *)loggerKey;
 
 /**
- * Remove logger. After removing, all other methods with same logger key do nothing.
+ * Remove logger. After removing, all other methods with a same logger key will do nothing.
  *
- * If the logger doesn't exist nothing happens.
+ * If logger doesn't exist nothing happens.
  *
- * Corresponding macro is DVLoggerRemove(loggerKey)
+ * Corresponding macro - DVLoggerRemove(loggerKey)
  */
 - (void)loggerRemove:(NSString *)loggerKey;
 
 /**
- * Set configuration for logger. The configuration if applied only to new messages.
+ * Set configuration for logger.
  *
- * ! WARNING for nice workflow configuration should be set before sending any log
+ * If logger doesn't exist nothing happens.
  *
- * If the logger doesn't exist nothing happens.
- *
- * Corresponding macro is DVLoggerSetConfiguration(
- *                                                    NSString *loggerKey,
- *                                                    BOOL latestMessageOnTop,
- *                                                    BOOL scrollToNewMessage,
- *                                                    UIFont *font
- *                                                )
+ * Corresponding macro - DVLoggerSetConfiguration(
+ *                                                   NSString *loggerKey,
+ *                                                   BOOL latestMessageOnTop,
+ *                                                   BOOL scrollToNewMessage,
+ *                                                   UIFont *font
+ *                                               )
  */
 - (void)loggerSetConfigurationForLogger:(NSString *)loggerKey
                           configuration:(DVLoggerConfiguration *)configuration;
 
 /**
- * Add string with format to logger. The appearance depends on logger's configuration.
+ * Add string with format to logger. The appearance depends on a logger configuration.
  *
- * If the logger doesn't exist nothing happens.
+ * If logger doesn't exist nothing happens.
  *
- * Corresponding macro is DVLoggerLog(loggerKey, format, ...)
- * Also this method has short macro DVLLog(loggerKey, format, ...)
+ * Corresponding macro -              DVLoggerLog(loggerKey, format, ...)
+ * Also this method has short macro - DVLLog(loggerKey, format, ...)
  */
 - (void)loggerLogToLogger:(NSString *)loggerKey
                       log:(NSString *)format,...;
 
 
 /**
- * Add button with handler to buttons tab (which is always first). On the button pressed
- * handler is called (if exists).
+ * Add a button with handler to buttons tab. When the button is pressed, handler is called
+ * (if exists).
  *
- * Corresponding macro is DVButtonAdd(
- *                                       NSString *title,
- *                                       DVFloatingWindowButtonHandler handler
- *                                   )
+ * Corresponding macro - DVButtonAdd(
+ *                                      NSString *title,
+ *                                      DVFloatingWindowButtonHandler handler
+ *                                  )
  */
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;
