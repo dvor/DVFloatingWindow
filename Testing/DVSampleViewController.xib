@@ -39,7 +39,7 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUILabel" id="540232909">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">293</int>
 						<string key="NSFrameSize">{320, 65}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -74,7 +74,7 @@
 					</object>
 					<object class="IBUIButton" id="688121347">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">293</int>
 						<string key="NSFrame">{{41, 105}, {238, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -110,8 +110,8 @@
 					</object>
 					<object class="IBUILabel" id="467189930">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{41, 156}, {174, 21}}</string>
+						<int key="NSvFlags">293</int>
+						<string key="NSFrame">{{66, 156}, {188, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="194870851"/>
@@ -138,8 +138,8 @@
 					</object>
 					<object class="IBUILabel" id="194870851">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{237, 156}, {42, 21}}</string>
+						<int key="NSvFlags">293</int>
+						<string key="NSFrame">{{139, 185}, {42, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="775963441"/>
@@ -153,15 +153,15 @@
 						<reference key="IBUITextColor" ref="240206174"/>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">0</int>
-						<int key="IBUITextAlignment">2</int>
+						<int key="IBUITextAlignment">1</int>
 						<reference key="IBUIFontDescription" ref="134934522"/>
 						<reference key="IBUIFont" ref="511223609"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
 					<object class="IBUISlider" id="775963441">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{39, 185}, {242, 23}}</string>
+						<int key="NSvFlags">293</int>
+						<string key="NSFrame">{{39, 226}, {242, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="396699412"/>
@@ -174,11 +174,10 @@
 					</object>
 					<object class="IBUIButton" id="396699412">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">293</int>
 						<string key="NSFrame">{{41, 269}, {238, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -296,10 +295,10 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="540232909"/>
 							<reference ref="688121347"/>
-							<reference ref="467189930"/>
-							<reference ref="194870851"/>
-							<reference ref="775963441"/>
 							<reference ref="396699412"/>
+							<reference ref="467189930"/>
+							<reference ref="775963441"/>
+							<reference ref="194870851"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -370,6 +369,25 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">DVSampleViewController</string>
 					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="createButtonThatChangesColor:">id</string>
+						<string key="defaultLoggerSliderChanged:">id</string>
+						<string key="logDateToDefaultLoggerButtonPressed:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="createButtonThatChangesColor:">
+							<string key="name">createButtonThatChangesColor:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="defaultLoggerSliderChanged:">
+							<string key="name">defaultLoggerSliderChanged:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="logDateToDefaultLoggerButtonPressed:">
+							<string key="name">logDateToDefaultLoggerButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="defaultFontSizeLabel">UILabel</string>
 						<string key="defaultFontSizeSlider">UISlider</string>
