@@ -7,7 +7,7 @@
 //
 
 #import "DVAppDelegate.h"
-#import "DVSampleViewController.h"
+#import "DVStartViewController.h"
 #import "DVFloatingWindow.h"
 
 @implementation DVAppDelegate
@@ -16,7 +16,8 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    self.window.rootViewController = [DVSampleViewController new];
+    self.window.rootViewController = [[UINavigationController alloc] 
+        initWithRootViewController:[DVStartViewController new]];
 
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

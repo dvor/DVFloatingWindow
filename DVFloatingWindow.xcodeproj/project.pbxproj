@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */; };
-		2D28DF5D17A1FF7600C0E49B /* DVSampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28DF5B17A1FF7600C0E49B /* DVSampleViewController.m */; };
-		2D28DF5E17A1FF7600C0E49B /* DVSampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D28DF5C17A1FF7600C0E49B /* DVSampleViewController.xib */; };
 		2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */; };
 		2D889CA917A9CA4500A4F0E6 /* DVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA817A9CA4400A4F0E6 /* DVLogger.m */; };
 		2D889CAC17A9CB2300A4F0E6 /* DVLoggerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CAB17A9CB2300A4F0E6 /* DVLoggerConfiguration.m */; };
@@ -22,14 +20,19 @@
 		2DD8D8FF1799D9DF00538E90 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD8D8FE1799D9DF00538E90 /* Default.png */; };
 		2DD8D9011799D9DF00538E90 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD8D9001799D9DF00538E90 /* Default@2x.png */; };
 		2DD8D9031799D9DF00538E90 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DD8D9021799D9DF00538E90 /* Default-568h@2x.png */; };
+		84B0773E17B1478F007E99FD /* DVStartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B0773C17B1478F007E99FD /* DVStartViewController.m */; };
+		84B0773F17B1478F007E99FD /* DVStartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84B0773D17B1478F007E99FD /* DVStartViewController.xib */; };
+		84B0774317B1480C007E99FD /* DVDefaultLoggerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B0774117B1480C007E99FD /* DVDefaultLoggerViewController.m */; };
+		84B0774417B1480C007E99FD /* DVDefaultLoggerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84B0774217B1480C007E99FD /* DVDefaultLoggerViewController.xib */; };
+		84B0774817B1484C007E99FD /* DVLoggerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B0774617B1484C007E99FD /* DVLoggerViewController.m */; };
+		84B0774917B1484C007E99FD /* DVLoggerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84B0774717B1484C007E99FD /* DVLoggerViewController.xib */; };
+		84B0774D17B14856007E99FD /* DVButtonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B0774B17B14856007E99FD /* DVButtonsViewController.m */; };
+		84B0774E17B14856007E99FD /* DVButtonsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84B0774C17B14856007E99FD /* DVButtonsViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2D28DF5717A1FE4500C0E49B /* DVFloatingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVFloatingWindow.h; sourceTree = "<group>"; };
 		2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVFloatingWindow.m; sourceTree = "<group>"; };
-		2D28DF5A17A1FF7600C0E49B /* DVSampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSampleViewController.h; sourceTree = "<group>"; };
-		2D28DF5B17A1FF7600C0E49B /* DVSampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVSampleViewController.m; sourceTree = "<group>"; };
-		2D28DF5C17A1FF7600C0E49B /* DVSampleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVSampleViewController.xib; sourceTree = "<group>"; };
 		2D821CDE17B04B9C00E4B602 /* DVMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVMacros.h; sourceTree = "<group>"; };
 		2D889C9F17A9BAA100A4F0E6 /* DVButtonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVButtonObject.h; sourceTree = "<group>"; };
 		2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVButtonObject.m; sourceTree = "<group>"; };
@@ -51,6 +54,18 @@
 		2DD8D8FE1799D9DF00538E90 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		2DD8D9001799D9DF00538E90 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		2DD8D9021799D9DF00538E90 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		84B0773B17B1478F007E99FD /* DVStartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVStartViewController.h; sourceTree = "<group>"; };
+		84B0773C17B1478F007E99FD /* DVStartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVStartViewController.m; sourceTree = "<group>"; };
+		84B0773D17B1478F007E99FD /* DVStartViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVStartViewController.xib; sourceTree = "<group>"; };
+		84B0774017B1480C007E99FD /* DVDefaultLoggerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVDefaultLoggerViewController.h; sourceTree = "<group>"; };
+		84B0774117B1480C007E99FD /* DVDefaultLoggerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVDefaultLoggerViewController.m; sourceTree = "<group>"; };
+		84B0774217B1480C007E99FD /* DVDefaultLoggerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVDefaultLoggerViewController.xib; sourceTree = "<group>"; };
+		84B0774517B1484C007E99FD /* DVLoggerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVLoggerViewController.h; sourceTree = "<group>"; };
+		84B0774617B1484C007E99FD /* DVLoggerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVLoggerViewController.m; sourceTree = "<group>"; };
+		84B0774717B1484C007E99FD /* DVLoggerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVLoggerViewController.xib; sourceTree = "<group>"; };
+		84B0774A17B14855007E99FD /* DVButtonsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVButtonsViewController.h; sourceTree = "<group>"; };
+		84B0774B17B14856007E99FD /* DVButtonsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVButtonsViewController.m; sourceTree = "<group>"; };
+		84B0774C17B14856007E99FD /* DVButtonsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVButtonsViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,9 +140,7 @@
 			children = (
 				2DD8D8FB1799D9DF00538E90 /* DVAppDelegate.h */,
 				2DD8D8FC1799D9DF00538E90 /* DVAppDelegate.m */,
-				2D28DF5A17A1FF7600C0E49B /* DVSampleViewController.h */,
-				2D28DF5B17A1FF7600C0E49B /* DVSampleViewController.m */,
-				2D28DF5C17A1FF7600C0E49B /* DVSampleViewController.xib */,
+				84B0773A17B1475E007E99FD /* Controllers */,
 				2D28DF5617A1FDC700C0E49B /* DVFloatingWindow */,
 				2DD8D8F31799D9DF00538E90 /* Supporting Files */,
 			);
@@ -146,6 +159,25 @@
 				2DD8D9021799D9DF00538E90 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		84B0773A17B1475E007E99FD /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				84B0774A17B14855007E99FD /* DVButtonsViewController.h */,
+				84B0774B17B14856007E99FD /* DVButtonsViewController.m */,
+				84B0774C17B14856007E99FD /* DVButtonsViewController.xib */,
+				84B0774017B1480C007E99FD /* DVDefaultLoggerViewController.h */,
+				84B0774117B1480C007E99FD /* DVDefaultLoggerViewController.m */,
+				84B0774217B1480C007E99FD /* DVDefaultLoggerViewController.xib */,
+				84B0774517B1484C007E99FD /* DVLoggerViewController.h */,
+				84B0774617B1484C007E99FD /* DVLoggerViewController.m */,
+				84B0774717B1484C007E99FD /* DVLoggerViewController.xib */,
+				84B0773B17B1478F007E99FD /* DVStartViewController.h */,
+				84B0773C17B1478F007E99FD /* DVStartViewController.m */,
+				84B0773D17B1478F007E99FD /* DVStartViewController.xib */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,7 +236,10 @@
 				2DD8D8FF1799D9DF00538E90 /* Default.png in Resources */,
 				2DD8D9011799D9DF00538E90 /* Default@2x.png in Resources */,
 				2DD8D9031799D9DF00538E90 /* Default-568h@2x.png in Resources */,
-				2D28DF5E17A1FF7600C0E49B /* DVSampleViewController.xib in Resources */,
+				84B0773F17B1478F007E99FD /* DVStartViewController.xib in Resources */,
+				84B0774417B1480C007E99FD /* DVDefaultLoggerViewController.xib in Resources */,
+				84B0774917B1484C007E99FD /* DVLoggerViewController.xib in Resources */,
+				84B0774E17B14856007E99FD /* DVButtonsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,10 +253,13 @@
 				2DD8D8F91799D9DF00538E90 /* main.m in Sources */,
 				2DD8D8FD1799D9DF00538E90 /* DVAppDelegate.m in Sources */,
 				2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */,
-				2D28DF5D17A1FF7600C0E49B /* DVSampleViewController.m in Sources */,
 				2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */,
 				2D889CA917A9CA4500A4F0E6 /* DVLogger.m in Sources */,
 				2D889CAC17A9CB2300A4F0E6 /* DVLoggerConfiguration.m in Sources */,
+				84B0773E17B1478F007E99FD /* DVStartViewController.m in Sources */,
+				84B0774317B1480C007E99FD /* DVDefaultLoggerViewController.m in Sources */,
+				84B0774817B1484C007E99FD /* DVLoggerViewController.m in Sources */,
+				84B0774D17B14856007E99FD /* DVButtonsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
