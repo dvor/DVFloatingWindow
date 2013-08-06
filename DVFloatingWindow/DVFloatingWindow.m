@@ -218,7 +218,7 @@
         [self tabShowNext];
     }
 
-    self.dictWithLoggers[key] = nil;
+    [self.dictWithLoggers removeObjectForKey:key];
     [self updateTopTitleLabelText];
 }
 
