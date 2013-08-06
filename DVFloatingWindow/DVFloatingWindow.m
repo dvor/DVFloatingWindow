@@ -11,14 +11,14 @@
 #import "DVButtonObject.h"
 
 #define BORDER_SIZE 2
-#define TOP_BORDER_HEIGHT 15
-#define BOTTOM_CORNER_SIZE 15
+#define TOP_BORDER_HEIGHT 30
+#define BOTTOM_CORNER_SIZE 30
 #define MOVEMENT_BUTTON_WIDTH 30
 
 #define MIN_ORIGIN_Y 20
-#define MIN_VISIBLE_SIZE 15
-#define MIN_WIDTH 30
-#define MIN_HEIGHT 30
+#define MIN_VISIBLE_SIZE 30
+#define MIN_WIDTH 60
+#define MIN_HEIGHT 60
 
 @interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
@@ -55,6 +55,7 @@
 
         self.frame = CGRectMake(0, 100, 100, 100);
         self.backgroundColor = [UIColor lightGrayColor];
+        self.clipsToBounds = YES;
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
@@ -107,6 +108,8 @@
     [super setFrame:frame];
 
     frame = self.tableView.frame;
+    frame.origin.x = BORDER_SIZE;
+    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
         BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
