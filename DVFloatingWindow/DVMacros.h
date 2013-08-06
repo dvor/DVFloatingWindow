@@ -39,6 +39,10 @@
      #define DVLoggerLog(loggerKey, format, ...) \
           [[DVFloatingWindow sharedInstance] loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
 
+    #define DVButtonAdd(title, theHandler) \
+          [[DVFloatingWindow sharedInstance] buttonAddWithTitle:title handler:theHandler]
+
+
 #else
 
      #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 

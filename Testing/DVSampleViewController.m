@@ -59,9 +59,14 @@
                                             blue:arc4random() % 256 / 256.0
                                            alpha:1.0];
 
-    [[DVFloatingWindow sharedInstance] buttonAddWithTitle:@"Change color" handler:^{
+    const CGFloat *components = CGColorGetComponents(randomColor.CGColor);
+
+    NSString *colorName = [NSString stringWithFormat:@"Change color to %f,%f,%f,%f", 
+             components[0], components[1], components[2], components[3]];
+
+    DVButtonAdd(colorName, ^{
         self.view.backgroundColor = randomColor;
-    }];
+    });
 }
 
 

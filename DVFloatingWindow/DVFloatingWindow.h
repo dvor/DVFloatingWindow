@@ -119,6 +119,11 @@
 /**
  * Add button with handler to buttons tab (which is always first). On the button pressed
  * handler is called (if exists).
+ *
+ * Corresponding macro is DVButtonAdd(
+ *                                       NSString *title,
+ *                                       DVFloatingWindowButtonHandler handler
+ *                                   )
  */
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;
