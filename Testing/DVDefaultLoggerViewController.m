@@ -54,6 +54,7 @@
     [super viewDidAppear:animated];
 
     DVTabSwitchToLogger(@"Default");
+    DVWindowShow();
 }
 
 #pragma mark -  Methods

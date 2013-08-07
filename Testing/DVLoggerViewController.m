@@ -41,6 +41,13 @@
     [super viewDidUnload];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    DVWindowShow();
+}
+
 #pragma mark -  Methods
 
 - (void)nextButtonPressed

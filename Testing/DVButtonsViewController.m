@@ -15,6 +15,17 @@
 
 @implementation DVButtonsViewController
 
+#pragma mark -  Lifecycle
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    DVWindowShow();
+}
+
+#pragma mark -  Methods
+
 - (IBAction)colorButtonPressed:(id)sender
 {
     UIColor *randomColor = [UIColor colorWithRed:arc4random() % 256 / 256.0
