@@ -12,7 +12,8 @@
 
 @interface DVStartViewController ()
 
-@property (weak, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *firstSegmented;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *secondSegmented;
 
 @end
 
@@ -33,9 +34,10 @@
     return self;
 }
 
-- (void)viewDidUnload 
+- (void)viewDidUnload
 {
-    [self setLabel:nil];
+    [self setFirstSegmented:nil];
+    [self setSecondSegmented:nil];
     [super viewDidUnload];
 }
 
@@ -47,17 +49,14 @@
                                          animated:YES];
 }
 
-- (IBAction)twoFingersTapButtonPressed:(id)sender 
+- (IBAction)segmentedControllerChange:(id)sender 
 {
-    DVWindowActivationTap(2);
-
-    self.label.text = @"Two fingers tap anywhere to show/hide";
-}
-- (IBAction)longPressButtonPressed:(id)sender 
-{
-    DVWindowActivationLongPress(1, 0.5);
-
-    self.label.text = @"Long press anywhere to show/hide";
+    if (self.firstSegmented.selectedSegmentIndex == 0) {
+        DVWindowActivationTap(self.secondSegmented.selectedSegmentIndex+1);
+    }
+    else {
+        DVWindowActivationLongPress(self.secondSegmented.selectedSegmentIndex+1, 0.5);
+    }
 }
 
 @end

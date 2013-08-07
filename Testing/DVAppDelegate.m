@@ -22,7 +22,18 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
 
-    DVWindowActivationLongPress(1, 0.5);
+    NSString *tab1 = @"Tab 1";
+    NSString *tab2 = @"Tab 2";
+
+    DVWindowActivationTap(2);
+    DVLoggerCreate(tab1);
+    DVLoggerCreate(tab2);
+    DVLoggerSetConfiguration(tab2, YES, YES, [UIFont systemFontOfSize:15]);
+
+    DVLog(@"This is tab with default logger");
+    DVLLog(@"Tab 1", @"This is tab 1");
+    DVLLog(@"Tab 2", @"This is tab 2");
+    DVLLog(@"Tab 2", @"Hello");
 
     return YES;
 }

@@ -10,7 +10,7 @@
 #import "DVFloatingWindow.h"
 #import "DVButtonsViewController.h"
 
-@interface DVLoggerViewController ()
+@interface DVLoggerViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *textToLogTextField;
@@ -62,11 +62,20 @@
 - (IBAction)createButtonPressed:(id)sender 
 {
     DVLoggerCreate(self.titleTextField.text);
+    DVTabSwitchToLogger(self.titleTextField.text);
 }
 
 - (IBAction)logButtonPressed:(id)sender 
 {
     DVLLog(self.titleTextField.text, self.textToLogTextField.text);
+}
+
+#pragma mark -  UITextField delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 @end

@@ -40,7 +40,7 @@
 					<object class="IBUIButton" id="631326064">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">293</int>
-						<string key="NSFrame">{{41, 155}, {238, 44}}</string>
+						<string key="NSFrame">{{41, 178}, {238, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1052894173"/>
@@ -141,11 +141,36 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<float key="IBUIValue">0.5</float>
 					</object>
+					<object class="IBUILabel" id="881917279">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">293</int>
+						<string key="NSFrameSize">{320, 105}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="631326064"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<bool key="IBUIClipsSubviews">YES</bool>
+						<int key="IBUIContentMode">7</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<string type="base64-UTF8" key="IBUIText">RGVmYXVsdCBsb2dnZXIgaXMgY3JlYXRlZCBieSBvbiBzdGFydCAgICAKTG9nZ2luZyBleGFtcGxlOiAg
+ICAKCkRWTG9nKEAiJUAiLCBbTlNEYXRlIGRhdGVdKTs</string>
+						<reference key="IBUITextColor" ref="964243993"/>
+						<nil key="IBUIHighlightedColor"/>
+						<int key="IBUIBaselineAdjustment">0</int>
+						<int key="IBUINumberOfLines">0</int>
+						<int key="IBUITextAlignment">1</int>
+						<reference key="IBUIFontDescription" ref="298858460"/>
+						<reference key="IBUIFont" ref="702592227"/>
+						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
+						<double key="preferredMaxLayoutWidth">320</double>
+					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 548}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView"/>
+				<reference key="NSNextKeyView" ref="881917279"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
@@ -231,10 +256,11 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="631326064"/>
 							<reference ref="33954605"/>
 							<reference ref="1052894173"/>
 							<reference ref="998013984"/>
+							<reference ref="881917279"/>
+							<reference ref="631326064"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -273,6 +299,11 @@
 						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">56</int>
+						<reference key="object" ref="881917279"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -283,6 +314,7 @@
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="6.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -290,7 +322,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">55</int>
+			<int key="maxID">56</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
