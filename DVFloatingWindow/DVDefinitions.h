@@ -7,3 +7,5 @@
 //
 
 typedef void (^DVFloatingWindowButtonHandler)();
+
+#define DV_FLOATING_WINDOW_DEFAULT_LOGGER_KEY @"Default"

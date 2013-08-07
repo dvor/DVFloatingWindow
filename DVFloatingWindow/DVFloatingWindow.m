@@ -59,8 +59,6 @@
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
-
-        self.areButtonsVisible = YES;
     }
 
     return self;
@@ -73,7 +71,8 @@
     @synchronized(self) {
         if (! window) {
             window = [[DVFloatingWindow alloc] initPrivate];
-            [window loggerCreate:@"Default"];
+            [window loggerCreate:DV_FLOATING_WINDOW_DEFAULT_LOGGER_KEY];
+            [window tabSwitchToLogger:DV_FLOATING_WINDOW_DEFAULT_LOGGER_KEY];
         }
     }
 
@@ -523,10 +522,7 @@
         self.topTitleLabel.text = @"<<Buttons>>";
     }
     else {
-        NSArray *keys = [self sortedLoggersKeys];
-
-        self.topTitleLabel.text = [NSString stringWithFormat:@"%d <<%@>>",
-            [keys indexOfObject:self.visibleLoggerKey], self.visibleLoggerKey];
+        self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
     }
 }
 
@@ -551,7 +547,13 @@
             self.visibleLoggerKey = keys[index];
         }
         else {
-            self.areButtonsVisible = YES;
+            if (self.arrayWithButtons.count) {
+                self.areButtonsVisible = YES;
+            }
+            else {
+                index = (index < 0) ? keys.count-1 : 0;
+                self.visibleLoggerKey = keys[index];
+            }
         }
     }
 
