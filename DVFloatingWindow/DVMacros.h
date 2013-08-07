@@ -59,6 +59,8 @@
      
      #define DVTapNext 
      #define DVTabPrevious 
+     #define DVTabSwitchToLogger(loggerKey) 
+     #define DVTabSwitchToButtonsTab() 
      
      #define DVLoggerCreate(key) 
      #define DVLoggerClear(key) 
