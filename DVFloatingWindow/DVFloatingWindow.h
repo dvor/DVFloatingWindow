@@ -69,6 +69,13 @@
  */
 - (void)tabSwitchToLogger:(NSString *)loggerKey;
 
+/**
+ * Switch to buttons tab
+ *
+ * Corresponding macro - DVTabSwitchToButtonsTab()
+ */
+- (void)tabSwitchToButtonsTab;
+
 
 /**
  * Create logger with NSString as a key (identifier). Only after logger was created it can

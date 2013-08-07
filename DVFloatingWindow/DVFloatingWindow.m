@@ -194,6 +194,16 @@
     [self.tableView reloadData];
 }
 
+- (void)tabSwitchToButtonsTab
+{
+    if (self.arrayWithButtons.count) {
+        self.areButtonsVisible = YES;
+    }
+
+    [self updateTopTitleLabelText];
+    [self.tableView reloadData];
+}
+
 #pragma mark -  Methods logger
 
 - (void)loggerCreate:(NSString *)key

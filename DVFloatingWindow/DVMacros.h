@@ -29,6 +29,8 @@
      #define DVTabNext() [[DVFloatingWindow sharedInstance] tabShowNext]
      #define DVTabSwitchToLogger(loggerKey) \
          [[DVFloatingWindow sharedInstance] tabSwitchToLogger:loggerKey]
+     #define DVTabSwitchToButtonsTab() \
+         [[DVFloatingWindow sharedInstance] tabSwitchToButtonsTab]
      
      #define DVLoggerCreate(key) [[DVFloatingWindow sharedInstance] loggerCreate:key]
      #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
