@@ -49,6 +49,13 @@
     [super viewDidUnload];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    DVTabSwitchToLogger(@"Default");
+}
+
 #pragma mark -  Methods
 
 - (void)nextButtonPressed

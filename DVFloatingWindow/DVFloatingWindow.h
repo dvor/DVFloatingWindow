@@ -62,6 +62,13 @@
 - (void)tabShowPrevious;
 - (void)tabShowNext;
 
+/**
+ * Switch to tab with particular logger (if such exist)
+ *
+ * Corresponding macro - DVTabSwitchToLogger(loggerKey)
+ */
+- (void)tabSwitchToLogger:(NSString *)loggerKey;
+
 
 /**
  * Create logger with NSString as a key (identifier). Only after logger was created it can

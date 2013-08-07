@@ -182,6 +182,19 @@
     [self tabShowNextOrNot:YES];
 }
 
+- (void)tabSwitchToLogger:(NSString *)loggerKey
+{
+    if (! [loggerKey isKindOfClass:[NSString class]] || ! self.dictWithLoggers[loggerKey]) {
+        return;
+    }
+
+    self.areButtonsVisible = NO;
+    self.visibleLoggerKey = loggerKey;
+
+    [self updateTopTitleLabelText];
+    [self.tableView reloadData];
+}
+
 #pragma mark -  Methods logger
 
 - (void)loggerCreate:(NSString *)key
