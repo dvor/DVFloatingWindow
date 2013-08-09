@@ -23,7 +23,7 @@ Enable DVFloatingWindow in your `<Project name>-Prefix.pch` file. Import a heade
 #define DV_FLOATING_WINDOW_ENABLE 1
 
 // uncomment if you want to make FLoatingWindow accessible all over project
-//#import "DVFloatingWindow.h"
+//#import <DVFloatingWindow/DVFloatingWindow.h>
 ```
 
 # Usage
