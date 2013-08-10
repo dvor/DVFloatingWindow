@@ -151,6 +151,11 @@ To send all your NSLogs to Xcode console and DVFloatingWindow just add this macr
 
 Found a bug? Have a feature request? [Please submit an issue](https://github.com/dvor/DVFloatingWindow/issues).
 
+# Contact
+
+[email](mailto:dvor@dvor.me)
+[@__dvor](https://twitter.com/__dvor)
+
 # License
 
 DVFloatingWindow is available under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
