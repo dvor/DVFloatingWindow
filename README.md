@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dvor/DVFloatingWindow.png?branch=development)](https://travis-ci.org/dvor/DVFloatingWindow)
+
 DVFloatingWindow is a simple and effective tool for reviewing your application logs just from within. 
 
 You can manage them by creating a separate tab for each log, quickly switch between tabs and see all the details you need. Also there is an opportunity to add buttons with your custom handlers for helping you to debug your app (e.g. send a network request, reset settings, etc.).
