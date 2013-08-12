@@ -9,11 +9,13 @@
 #import "DVFloatingWindow.h"
 #import "DVLogger.h"
 #import "DVButtonObject.h"
+#import "DVClearButton.h"
 
 #define BORDER_SIZE 2
 #define TOP_BORDER_HEIGHT 30
 #define BOTTOM_CORNER_SIZE 30
 #define MOVEMENT_BUTTON_WIDTH 30
+#define CLEAR_BUTTON_WIDTH 60
 
 #define MIN_ORIGIN_Y 20
 #define MIN_VISIBLE_SIZE 30
@@ -27,6 +29,7 @@
 @property (strong, nonatomic) UIView *bottomCorner;
 @property (strong, nonatomic) UIButton *previousButton;
 @property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) DVClearButton *clearButton;
 
 @property (strong, nonatomic) NSMutableArray *arrayWithButtons;
 @property (strong, nonatomic) NSMutableDictionary *dictWithLoggers;
@@ -122,6 +125,10 @@
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.nextButton.frame = frame;
 
+    frame = self.clearButton.frame;
+    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
+    self.clearButton.frame = frame;
+
     frame = self.topTitleLabel.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     self.topTitleLabel.frame = frame;
@@ -203,8 +210,7 @@
         self.areButtonsVisible = NO;
         self.visibleLoggerKey = loggerKey;
 
-        [self updateTopTitleLabelText];
-        [self.tableView reloadData];
+        [self updateAll];
     }
 }
 
@@ -215,8 +221,7 @@
             self.areButtonsVisible = YES;
         }
 
-        [self updateTopTitleLabelText];
-        [self.tableView reloadData];
+        [self updateAll];
     }
 }
 
@@ -230,7 +235,7 @@
 
     @synchronized(key) {
         self.dictWithLoggers[key] = [DVLogger loggerWithDefaultConfiguration];
-        [self updateTopTitleLabelText];
+        [self updateAll];
     }
 }
 
@@ -505,6 +510,23 @@
 
     {
         CGRect frame = CGRectZero;
+        frame.origin.x = 2 * (BORDER_SIZE + MOVEMENT_BUTTON_WIDTH);
+        frame.size.width = CLEAR_BUTTON_WIDTH;
+        frame.size.height = BOTTOM_CORNER_SIZE;
+
+        __weak typeof(self) weakSelf = self;
+
+        self.clearButton = [[DVClearButton alloc] initWithFrame:frame];
+        self.clearButton.clearHandler = ^{
+            if (! weakSelf.areButtonsVisible && weakSelf.visibleLoggerKey) {
+                [weakSelf loggerClear:weakSelf.visibleLoggerKey];
+            }
+        };
+        [self addSubview:self.clearButton];
+    }
+
+    {
+        CGRect frame = CGRectZero;
         frame.origin.x = frame.origin.y = BORDER_SIZE;
         frame.size.height = TOP_BORDER_HEIGHT;
 
@@ -554,6 +576,15 @@
     return [[self.dictWithLoggers allKeys] sortedArrayUsingSelector:@selector(compare:)];
 }
 
+- (void)updateAll
+{
+    [self updateTopTitleLabelText];
+    [self.tableView reloadData];
+
+    self.clearButton.userInteractionEnabled = ! self.areButtonsVisible;
+    [self.clearButton reset];
+}
+
 - (void)updateTopTitleLabelText
 {
     if (self.areButtonsVisible) {
@@ -595,8 +626,7 @@
         }
     }
 
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+    [self updateAll];
 }
 
 @end
