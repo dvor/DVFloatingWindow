@@ -136,49 +136,61 @@
 
 - (void)windowShow
 {
-    if (! self.superview) {
-        id delegate = [UIApplication sharedApplication].delegate;
-        [[delegate window] addSubview:self];
+    @synchronized(self) {
+        if (! self.superview) {
+            id delegate = [UIApplication sharedApplication].delegate;
+            [[delegate window] addSubview:self];
+        }
     }
 }
 
 - (void)windowHide
 {
-    [self removeFromSuperview];
+    @synchronized(self) {
+        [self removeFromSuperview];
+    }
 }
 
 - (void)windowActivationTapWithTouchesNumber:(NSUInteger)touchesNumber
 {
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
-        initWithTarget:self action:@selector(activateGesture:)];
+    @synchronized(self) {
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
+            initWithTarget:self action:@selector(activateGesture:)];
 
-    recognizer.numberOfTouchesRequired = touchesNumber;
+        recognizer.numberOfTouchesRequired = touchesNumber;
 
-    [self updateActivationGestureRecognizer:recognizer];
+        [self updateActivationGestureRecognizer:recognizer];
+    }
 }
 
 - (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
                               minimumPressDuration:(CFTimeInterval)minimumPressDuration
 {
-    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc]
-        initWithTarget:self action:@selector(activateGesture:)];
+    @synchronized(self) {
+        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc]
+            initWithTarget:self action:@selector(activateGesture:)];
 
-    recognizer.numberOfTouchesRequired = touchesNumber;
-    recognizer.minimumPressDuration = minimumPressDuration;
+        recognizer.numberOfTouchesRequired = touchesNumber;
+        recognizer.minimumPressDuration = minimumPressDuration;
 
-    [self updateActivationGestureRecognizer:recognizer];
+        [self updateActivationGestureRecognizer:recognizer];
+    }
 }
 
 #pragma mark -  Methods tab
 
 - (void)tabShowPrevious
 {
-    [self tabShowNextOrNot:NO];
+    @synchronized(self) {
+        [self tabShowNextOrNot:NO];
+    }
 }
 
 - (void)tabShowNext
 {
-    [self tabShowNextOrNot:YES];
+    @synchronized(self) {
+        [self tabShowNextOrNot:YES];
+    }
 }
 
 - (void)tabSwitchToLogger:(NSString *)loggerKey
@@ -187,21 +199,25 @@
         return;
     }
 
-    self.areButtonsVisible = NO;
-    self.visibleLoggerKey = loggerKey;
+    @synchronized(self) {
+        self.areButtonsVisible = NO;
+        self.visibleLoggerKey = loggerKey;
 
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+        [self updateTopTitleLabelText];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)tabSwitchToButtonsTab
 {
-    if (self.arrayWithButtons.count) {
-        self.areButtonsVisible = YES;
-    }
+    @synchronized(self) {
+        if (self.arrayWithButtons.count) {
+            self.areButtonsVisible = YES;
+        }
 
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+        [self updateTopTitleLabelText];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark -  Methods logger
@@ -212,8 +228,10 @@
         return;
     }
 
-    self.dictWithLoggers[key] = [DVLogger loggerWithDefaultConfiguration];
-    [self updateTopTitleLabelText];
+    @synchronized(key) {
+        self.dictWithLoggers[key] = [DVLogger loggerWithDefaultConfiguration];
+        [self updateTopTitleLabelText];
+    }
 }
 
 - (void)loggerClear:(NSString *)key
@@ -222,11 +240,13 @@
         return;
     }
 
-    DVLogger *logger = self.dictWithLoggers[key];
-    [logger removeAllLogs];
+    @synchronized(key) {
+        DVLogger *logger = self.dictWithLoggers[key];
+        [logger removeAllLogs];
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self.tableView reloadData];
+        if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+            [self.tableView reloadData];
+        }
     }
 }
 
@@ -236,29 +256,33 @@
         return;
     }
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self tabShowNext];
-    }
+    @synchronized(key) {
+        if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+            [self tabShowNext];
+        }
 
-    [self.dictWithLoggers removeObjectForKey:key];
-    [self updateTopTitleLabelText];
+        [self.dictWithLoggers removeObjectForKey:key];
+        [self updateTopTitleLabelText];
+    }
 }
 
 - (void)loggerSetConfigurationForLogger:(NSString *)key
                           configuration:(DVLoggerConfiguration *)configuration
 {
     if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
-        ! [key isKindOfClass:[NSString class]] || 
-        ! self.dictWithLoggers[key]) 
+                  ! [key isKindOfClass:[NSString class]] || 
+                  ! self.dictWithLoggers[key]) 
     {
         return;
     }
 
-    DVLogger *logger = self.dictWithLoggers[key];
-    logger.configuration = configuration;
+    @synchronized(key) {
+        DVLogger *logger = self.dictWithLoggers[key];
+        logger.configuration = configuration;
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self.tableView reloadData];
+        if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+            [self.tableView reloadData];
+        }
     }
 }
 
@@ -266,32 +290,34 @@
                       log:(NSString *)format,...
 {
     if (! [format isKindOfClass:[NSString class]] ||
-        ! [key isKindOfClass:[NSString class]] || 
-        ! self.dictWithLoggers[key]) 
+           ! [key isKindOfClass:[NSString class]] || 
+           ! self.dictWithLoggers[key]) 
     {
         return;
     }
 
-    va_list argList;
-    va_start (argList, format);
-    NSString *log = [[NSString alloc] initWithFormat:format arguments:argList];
-    va_end(argList);
+    @synchronized(key) {
+        va_list argList;
+        va_start (argList, format);
+        NSString *log = [[NSString alloc] initWithFormat:format arguments:argList];
+        va_end(argList);
 
-    DVLogger *logger = self.dictWithLoggers[key];
-    NSUInteger newIndex = [logger addLog:log];
+        DVLogger *logger = self.dictWithLoggers[key];
+        NSUInteger newIndex = [logger addLog:log];
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
-        [self.tableView insertRowsAtIndexPaths:@[path]
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-        if (logger.configuration.scrollToNewMessage) {
-            UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
-                UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
+        if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
+            NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
+            [self.tableView insertRowsAtIndexPaths:@[path]
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
 
-            [self.tableView scrollToRowAtIndexPath:path
-                                  atScrollPosition:scrollPosition
-                                          animated:YES];
+            if (logger.configuration.scrollToNewMessage) {
+                UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
+                    UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
+
+                [self.tableView scrollToRowAtIndexPath:path
+                                      atScrollPosition:scrollPosition
+                                              animated:YES];
+            }
         }
     }
 }
@@ -301,10 +327,12 @@
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler
 {
-    DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
+    @synchronized(self) {
+        DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
 
-    [self.arrayWithButtons addObject:object];
-    [self.tableView reloadData];
+        [self.arrayWithButtons addObject:object];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark -  Gestures
@@ -449,8 +477,8 @@
         self.previousButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [self.previousButton setTitle:@"<" forState:UIControlStateNormal];
         [self.previousButton addTarget:self
-                            action:@selector(tabShowPrevious)
-                  forControlEvents:UIControlEventTouchUpInside];
+                                action:@selector(tabShowPrevious)
+                      forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.previousButton];
 
         CGRect frame = self.previousButton.frame;
