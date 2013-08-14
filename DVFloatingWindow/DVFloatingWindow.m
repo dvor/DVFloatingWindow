@@ -68,6 +68,8 @@ typedef enum
         self.backgroundColor = [UIColor lightGrayColor];
         self.clipsToBounds = YES;
 
+        [self updateTableViewFrame];
+
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
     }
@@ -116,14 +118,6 @@ typedef enum
     }
 
     [super setFrame:frame];
-
-    frame = self.tableView.frame;
-    frame.origin.x = BORDER_SIZE;
-    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
-    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
-    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
-        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
-    self.tableView.frame = frame;
 
     frame = self.previousButton.frame;
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
@@ -193,9 +187,11 @@ typedef enum
 - (void)windowShow
 {
     @synchronized(self) {
-        if (! self.superview) {
+        if (! [self isWindowVisible]) {
             id delegate = [UIApplication sharedApplication].delegate;
             [[delegate window] addSubview:self];
+
+            [self.tableView reloadData];
         }
     }
 }
@@ -363,8 +359,9 @@ typedef enum
         DVLogger *logger = self.dictWithLoggers[key];
         NSUInteger newIndex = [logger addLog:log];
 
-        if (self.tableViewState == TableViewStateLogs &&
-                [key isEqualToString:self.visibleLoggerKey]) 
+        if ([self isWindowVisible] &&
+            self.tableViewState == TableViewStateLogs &&
+            [key isEqualToString:self.visibleLoggerKey]) 
         {
             NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
             [self.tableView insertRowsAtIndexPaths:@[path]
@@ -403,7 +400,7 @@ typedef enum
         return;
     }
 
-    if (self.superview) {
+    if ([self isWindowVisible]) {
         [self windowHide];
     }
     else {
@@ -433,6 +430,10 @@ typedef enum
     frame.size.height += translation.y;
 
     self.frame = frame;
+
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self updateTableViewFrame];
+    }
 }
 
 #pragma mark -  UITableView dataSource
@@ -673,6 +674,17 @@ typedef enum
     self.menuArray = nil;
 }
 
+- (void)updateTableViewFrame
+{
+    CGRect frame = self.tableView.frame;
+    frame.origin.x = BORDER_SIZE;
+    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
+    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
+    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
+        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
+    self.tableView.frame = frame;
+}
+
 - (void)updateActivationGestureRecognizer:(UIGestureRecognizer *)recognizer
 {
     id delegate = [UIApplication sharedApplication].delegate;
@@ -763,6 +775,11 @@ typedef enum
 {
     return self.tableViewState == TableViewStateMenuButtons ||
            self.tableViewState == TableViewStateMenuLogs;
+}
+
+- (BOOL)isWindowVisible
+{
+    return self.superview != nil;
 }
 
 @end
