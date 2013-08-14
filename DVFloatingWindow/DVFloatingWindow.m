@@ -441,6 +441,16 @@
             object.handler();
         }
     }
+    else if (self.visibleLoggerKey) {
+        DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+
+        if (indexPath.row >= logger.count) {
+            return;
+        }
+
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [logger logAtIndex:indexPath.row];
+    }
 }
 
 - (CGFloat)    tableView:(UITableView *)tableView
