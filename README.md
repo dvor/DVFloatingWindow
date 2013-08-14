@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dvor/DVFloatingWindow.png?branch=development)](https://travis-ci.org/dvor/DVFloatingWindow)
+[![Build Status](https://travis-ci.org/dvor/DVFloatingWindow.png?branch=master)](https://travis-ci.org/dvor/DVFloatingWindow)
 
 DVFloatingWindow is a simple and effective tool for reviewing your application logs just from within. 
 
@@ -15,7 +15,7 @@ There are two possible methods to include DVFloatingWindow in your project:
     * Install the pod by running `pod install`
 
 2. Manually: 
-    * Get the [latest version](https://github.com/dvor/DVFloatingWindow/archive/0.1.zip) 
+    * Get the [latest version](https://github.com/dvor/DVFloatingWindow/archive/0.2.zip) 
     * Drag files from DVFloatingWindow folder to your project (Check **Add to target** and **Copy items into destination group's folder** checkboxes)
 
 Enable DVFloatingWindow in your `<Project name>-Prefix.pch` file. Import a header file if you want to make it visible all over your project. Don't forget to disable DVFloatingWindow before submitting your app to AppStore!
@@ -117,7 +117,7 @@ DVTabNext();
 DVTabPrevious();
 
 // show the Default logger
-DVTabSwitchToLogger(@"Default);
+DVTabSwitchToLogger(@"Default");
 
 // show tab with buttons
 DVTabSwitchToButtonsTab();
@@ -153,9 +153,14 @@ To send all your NSLogs to Xcode console and DVFloatingWindow just add this macr
 
 Found a bug? Have a feature request? [Please submit an issue](https://github.com/dvor/DVFloatingWindow/issues).
 
+# Changelog
+
+[CHANGELOG.md](CHANGELOG.md)
+
 # Contact
 
 [email](mailto:dvor@dvor.me)
+
 [@__dvor](https://twitter.com/__dvor)
 
 # License
