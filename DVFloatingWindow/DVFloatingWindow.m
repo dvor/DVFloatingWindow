@@ -68,6 +68,8 @@ typedef enum
         self.backgroundColor = [UIColor lightGrayColor];
         self.clipsToBounds = YES;
 
+        [self updateTableViewFrame];
+
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
     }
@@ -116,14 +118,6 @@ typedef enum
     }
 
     [super setFrame:frame];
-
-    frame = self.tableView.frame;
-    frame.origin.x = BORDER_SIZE;
-    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
-    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
-    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
-        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
-    self.tableView.frame = frame;
 
     frame = self.previousButton.frame;
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
@@ -436,6 +430,10 @@ typedef enum
     frame.size.height += translation.y;
 
     self.frame = frame;
+
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self updateTableViewFrame];
+    }
 }
 
 #pragma mark -  UITableView dataSource
@@ -674,6 +672,17 @@ typedef enum
 - (void)deleteMenu
 {
     self.menuArray = nil;
+}
+
+- (void)updateTableViewFrame
+{
+    CGRect frame = self.tableView.frame;
+    frame.origin.x = BORDER_SIZE;
+    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
+    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
+    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
+        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
+    self.tableView.frame = frame;
 }
 
 - (void)updateActivationGestureRecognizer:(UIGestureRecognizer *)recognizer
