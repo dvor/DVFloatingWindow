@@ -193,9 +193,11 @@ typedef enum
 - (void)windowShow
 {
     @synchronized(self) {
-        if (! self.superview) {
+        if (! [self isWindowVisible]) {
             id delegate = [UIApplication sharedApplication].delegate;
             [[delegate window] addSubview:self];
+
+            [self.tableView reloadData];
         }
     }
 }
@@ -363,8 +365,9 @@ typedef enum
         DVLogger *logger = self.dictWithLoggers[key];
         NSUInteger newIndex = [logger addLog:log];
 
-        if (self.tableViewState == TableViewStateLogs &&
-                [key isEqualToString:self.visibleLoggerKey]) 
+        if ([self isWindowVisible] &&
+            self.tableViewState == TableViewStateLogs &&
+            [key isEqualToString:self.visibleLoggerKey]) 
         {
             NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
             [self.tableView insertRowsAtIndexPaths:@[path]
@@ -403,7 +406,7 @@ typedef enum
         return;
     }
 
-    if (self.superview) {
+    if ([self isWindowVisible]) {
         [self windowHide];
     }
     else {
@@ -763,6 +766,11 @@ typedef enum
 {
     return self.tableViewState == TableViewStateMenuButtons ||
            self.tableViewState == TableViewStateMenuLogs;
+}
+
+- (BOOL)isWindowVisible
+{
+    return self.superview != nil;
 }
 
 @end
