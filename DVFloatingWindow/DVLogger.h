@@ -22,4 +22,6 @@
 - (NSString *)logAtIndex:(NSUInteger)index;
 - (void)removeAllLogs;
 
+- (BOOL)sendLogsToEmail;
+
 @end

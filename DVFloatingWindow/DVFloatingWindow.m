@@ -14,11 +14,20 @@
 #define TOP_BORDER_HEIGHT 30
 #define BOTTOM_CORNER_SIZE 30
 #define MOVEMENT_BUTTON_WIDTH 30
+#define MENU_BUTTON_WIDTH 60
 
 #define MIN_ORIGIN_Y 20
 #define MIN_VISIBLE_SIZE 30
 #define MIN_WIDTH 60
 #define MIN_HEIGHT 60
+
+typedef enum
+{
+    TableViewStateMenuButtons,
+    TableViewStateMenuLogs,
+    TableViewStateButtons,
+    TableViewStateLogs
+} TableViewState;
 
 @interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
@@ -27,11 +36,13 @@
 @property (strong, nonatomic) UIView *bottomCorner;
 @property (strong, nonatomic) UIButton *previousButton;
 @property (strong, nonatomic) UIButton *nextButton;
+@property (strong, nonatomic) UIButton *menuButton;
 
+@property (strong, nonatomic) NSMutableArray *menuArray;
 @property (strong, nonatomic) NSMutableArray *arrayWithButtons;
 @property (strong, nonatomic) NSMutableDictionary *dictWithLoggers;
 
-@property (assign, nonatomic) BOOL areButtonsVisible;
+@property (assign, nonatomic) TableViewState tableViewState;
 @property (strong, nonatomic) NSString *visibleLoggerKey;
 
 @property (strong, nonatomic) UIGestureRecognizer *activateRecognizer;
@@ -56,6 +67,8 @@
         self.frame = CGRectMake(0, 100, 100, 100);
         self.backgroundColor = [UIColor lightGrayColor];
         self.clipsToBounds = YES;
+
+        [self updateTableViewFrame];
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
@@ -106,14 +119,6 @@
 
     [super setFrame:frame];
 
-    frame = self.tableView.frame;
-    frame.origin.x = BORDER_SIZE;
-    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
-    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
-    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
-        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
-    self.tableView.frame = frame;
-
     frame = self.previousButton.frame;
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.previousButton.frame = frame;
@@ -121,6 +126,10 @@
     frame = self.nextButton.frame;
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.nextButton.frame = frame;
+
+    frame = self.menuButton.frame;
+    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
+    self.menuButton.frame = frame;
 
     frame = self.topTitleLabel.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
@@ -132,53 +141,108 @@
     self.bottomCorner.frame = frame;
 }
 
+- (void)menuButtonPressed
+{
+    // change to simple state
+    if (self.tableViewState == TableViewStateMenuButtons) {
+        self.tableViewState = TableViewStateButtons;
+
+        [self.menuButton setTitle:@"Menu" forState:UIControlStateNormal];
+        self.previousButton.enabled = self.nextButton.enabled = YES;
+
+        [self deleteMenu];
+    }
+    else if (self.tableViewState == TableViewStateMenuLogs) {
+        self.tableViewState = TableViewStateLogs;
+
+        [self.menuButton setTitle:@"Menu" forState:UIControlStateNormal];
+        self.previousButton.enabled = self.nextButton.enabled = YES;
+
+        [self deleteMenu];
+    }
+    // change to menu state
+    else if (self.tableViewState == TableViewStateButtons) {
+        self.tableViewState = TableViewStateMenuButtons;
+
+        [self.menuButton setTitle:@"Back" forState:UIControlStateNormal];
+        self.previousButton.enabled = self.nextButton.enabled = NO;
+
+        [self createMenuForButtons];
+    }
+    else if (self.tableViewState == TableViewStateLogs) {
+        self.tableViewState = TableViewStateMenuLogs;
+
+        [self.menuButton setTitle:@"Back" forState:UIControlStateNormal];
+        self.previousButton.enabled = self.nextButton.enabled = NO;
+
+        [self createMenuForLogs];
+    }
+
+    [self updateTopTitleLabelText];
+    [self.tableView reloadData];
+}
+
 #pragma mark -  Methods window
 
 - (void)windowShow
 {
-    if (! self.superview) {
-        id delegate = [UIApplication sharedApplication].delegate;
-        [[delegate window] addSubview:self];
+    @synchronized(self) {
+        if (! [self isWindowVisible]) {
+            id delegate = [UIApplication sharedApplication].delegate;
+            [[delegate window] addSubview:self];
+
+            [self.tableView reloadData];
+        }
     }
 }
 
 - (void)windowHide
 {
-    [self removeFromSuperview];
+    @synchronized(self) {
+        [self removeFromSuperview];
+    }
 }
 
 - (void)windowActivationTapWithTouchesNumber:(NSUInteger)touchesNumber
 {
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
-        initWithTarget:self action:@selector(activateGesture:)];
+    @synchronized(self) {
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc]
+            initWithTarget:self action:@selector(activateGesture:)];
 
-    recognizer.numberOfTouchesRequired = touchesNumber;
+        recognizer.numberOfTouchesRequired = touchesNumber;
 
-    [self updateActivationGestureRecognizer:recognizer];
+        [self updateActivationGestureRecognizer:recognizer];
+    }
 }
 
 - (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
                               minimumPressDuration:(CFTimeInterval)minimumPressDuration
 {
-    UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc]
-        initWithTarget:self action:@selector(activateGesture:)];
+    @synchronized(self) {
+        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc]
+            initWithTarget:self action:@selector(activateGesture:)];
 
-    recognizer.numberOfTouchesRequired = touchesNumber;
-    recognizer.minimumPressDuration = minimumPressDuration;
+        recognizer.numberOfTouchesRequired = touchesNumber;
+        recognizer.minimumPressDuration = minimumPressDuration;
 
-    [self updateActivationGestureRecognizer:recognizer];
+        [self updateActivationGestureRecognizer:recognizer];
+    }
 }
 
 #pragma mark -  Methods tab
 
 - (void)tabShowPrevious
 {
-    [self tabShowNextOrNot:NO];
+    @synchronized(self) {
+        [self tabShowNextOrPrevious:NO];
+    }
 }
 
 - (void)tabShowNext
 {
-    [self tabShowNextOrNot:YES];
+    @synchronized(self) {
+        [self tabShowNextOrPrevious:YES];
+    }
 }
 
 - (void)tabSwitchToLogger:(NSString *)loggerKey
@@ -187,21 +251,23 @@
         return;
     }
 
-    self.areButtonsVisible = NO;
-    self.visibleLoggerKey = loggerKey;
+    @synchronized(self) {
+        self.tableViewState = TableViewStateLogs;
+        self.visibleLoggerKey = loggerKey;
 
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+        [self updateAll];
+    }
 }
 
 - (void)tabSwitchToButtonsTab
 {
-    if (self.arrayWithButtons.count) {
-        self.areButtonsVisible = YES;
-    }
+    @synchronized(self) {
+        if (self.arrayWithButtons.count) {
+            self.tableViewState = TableViewStateButtons;
+        }
 
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+        [self updateAll];
+    }
 }
 
 #pragma mark -  Methods logger
@@ -212,8 +278,10 @@
         return;
     }
 
-    self.dictWithLoggers[key] = [DVLogger loggerWithDefaultConfiguration];
-    [self updateTopTitleLabelText];
+    @synchronized(key) {
+        self.dictWithLoggers[key] = [DVLogger loggerWithDefaultConfiguration];
+        [self updateAll];
+    }
 }
 
 - (void)loggerClear:(NSString *)key
@@ -222,11 +290,15 @@
         return;
     }
 
-    DVLogger *logger = self.dictWithLoggers[key];
-    [logger removeAllLogs];
+    @synchronized(key) {
+        DVLogger *logger = self.dictWithLoggers[key];
+        [logger removeAllLogs];
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self.tableView reloadData];
+        if (self.tableViewState == TableViewStateLogs &&
+            [key isEqualToString:self.visibleLoggerKey])
+        {
+            [self.tableView reloadData];
+        }
     }
 }
 
@@ -236,29 +308,35 @@
         return;
     }
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self tabShowNext];
-    }
+    @synchronized(key) {
+        if ([self isStateLogOrMenuLog] && [key isEqualToString:self.visibleLoggerKey]) {
+            [self tabShowNext];
+        }
 
-    [self.dictWithLoggers removeObjectForKey:key];
-    [self updateTopTitleLabelText];
+        [self.dictWithLoggers removeObjectForKey:key];
+        [self updateTopTitleLabelText];
+    }
 }
 
 - (void)loggerSetConfigurationForLogger:(NSString *)key
                           configuration:(DVLoggerConfiguration *)configuration
 {
     if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
-        ! [key isKindOfClass:[NSString class]] || 
-        ! self.dictWithLoggers[key]) 
+                  ! [key isKindOfClass:[NSString class]] || 
+                  ! self.dictWithLoggers[key]) 
     {
         return;
     }
 
-    DVLogger *logger = self.dictWithLoggers[key];
-    logger.configuration = configuration;
+    @synchronized(key) {
+        DVLogger *logger = self.dictWithLoggers[key];
+        logger.configuration = configuration;
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        [self.tableView reloadData];
+        if (self.tableViewState == TableViewStateLogs &&
+                [key isEqualToString:self.visibleLoggerKey]) 
+        {
+            [self.tableView reloadData];
+        }
     }
 }
 
@@ -266,32 +344,37 @@
                       log:(NSString *)format,...
 {
     if (! [format isKindOfClass:[NSString class]] ||
-        ! [key isKindOfClass:[NSString class]] || 
-        ! self.dictWithLoggers[key]) 
+           ! [key isKindOfClass:[NSString class]] || 
+           ! self.dictWithLoggers[key]) 
     {
         return;
     }
 
-    va_list argList;
-    va_start (argList, format);
-    NSString *log = [[NSString alloc] initWithFormat:format arguments:argList];
-    va_end(argList);
+    @synchronized(key) {
+        va_list argList;
+        va_start (argList, format);
+        NSString *log = [[NSString alloc] initWithFormat:format arguments:argList];
+        va_end(argList);
 
-    DVLogger *logger = self.dictWithLoggers[key];
-    NSUInteger newIndex = [logger addLog:log];
+        DVLogger *logger = self.dictWithLoggers[key];
+        NSUInteger newIndex = [logger addLog:log];
 
-    if (! self.areButtonsVisible && [key isEqualToString:self.visibleLoggerKey]) {
-        NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
-        [self.tableView insertRowsAtIndexPaths:@[path]
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-        if (logger.configuration.scrollToNewMessage) {
-            UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
-                UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
+        if ([self isWindowVisible] &&
+            self.tableViewState == TableViewStateLogs &&
+            [key isEqualToString:self.visibleLoggerKey]) 
+        {
+            NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
+            [self.tableView insertRowsAtIndexPaths:@[path]
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
 
-            [self.tableView scrollToRowAtIndexPath:path
-                                  atScrollPosition:scrollPosition
-                                          animated:YES];
+            if (logger.configuration.scrollToNewMessage) {
+                UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
+                    UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
+
+                [self.tableView scrollToRowAtIndexPath:path
+                                      atScrollPosition:scrollPosition
+                                              animated:YES];
+            }
         }
     }
 }
@@ -301,10 +384,12 @@
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler
 {
-    DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
+    @synchronized(self) {
+        DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
 
-    [self.arrayWithButtons addObject:object];
-    [self.tableView reloadData];
+        [self.arrayWithButtons addObject:object];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark -  Gestures
@@ -315,7 +400,7 @@
         return;
     }
 
-    if (self.superview) {
+    if ([self isWindowVisible]) {
         [self windowHide];
     }
     else {
@@ -345,6 +430,10 @@
     frame.size.height += translation.y;
 
     self.frame = frame;
+
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self updateTableViewFrame];
+    }
 }
 
 #pragma mark -  UITableView dataSource
@@ -352,14 +441,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *identifier = self.areButtonsVisible ? @"DVButtonCell" : @"DVLoggerCell";
+    NSString *identifier = [self isStateMenu] ? @"DVButtonCell" : @"DVLoggerCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
 
     if (! cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:identifier];
 
-        if (self.areButtonsVisible) {
+        if ([self isStateMenu]) {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
         else {
@@ -367,11 +456,15 @@
         }
     }
 
-    if (self.areButtonsVisible) {
+    if ([self isStateMenu]) {
+        DVButtonObject *object = self.menuArray[indexPath.row];
+        cell.textLabel.text = object.name;
+    }
+    else if (self.tableViewState == TableViewStateButtons) {
         DVButtonObject *object = self.arrayWithButtons[indexPath.row];
         cell.textLabel.text = object.name;
     }
-    else {
+    else if (self.tableViewState == TableViewStateLogs) {
         DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
         cell.textLabel.text = [logger logAtIndex:indexPath.row];
         cell.textLabel.font = logger.configuration.font;
@@ -383,13 +476,18 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    if (self.areButtonsVisible) {
+    if ([self isStateMenu]) {
+        return self.menuArray.count;
+    }
+    else if (self.tableViewState == TableViewStateButtons) {
         return self.arrayWithButtons.count;
     }
-    else {
+    else if (self.tableViewState == TableViewStateLogs) {
         DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
         return logger.count;
     }
+
+    return 0;
 }
 
 #pragma mark -  UITableView delegate
@@ -398,7 +496,17 @@
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    if (self.areButtonsVisible) {
+    if ([self isStateMenu]) {
+        if (indexPath.row >= self.menuArray.count) {
+            return;
+        }
+
+        DVButtonObject *object = self.menuArray[indexPath.row];
+        if (object.handler) {
+            object.handler();
+        }
+    }
+    else if (self.tableViewState == TableViewStateButtons) {
         if (indexPath.row >= self.arrayWithButtons.count) {
             return;
         }
@@ -408,6 +516,16 @@
             object.handler();
         }
     }
+    else if (self.tableViewState == TableViewStateLogs) {
+        DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+
+        if (indexPath.row >= logger.count) {
+            return;
+        }
+
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [logger logAtIndex:indexPath.row];
+    }
 }
 
 - (CGFloat)    tableView:(UITableView *)tableView
@@ -415,7 +533,7 @@
 {
     CGFloat height = 0.0;
 
-    if (self.areButtonsVisible) {
+    if ([self isStateMenu] || self.tableViewState == TableViewStateButtons) {
         height = 44.0;
     }
     else {
@@ -449,8 +567,8 @@
         self.previousButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [self.previousButton setTitle:@"<" forState:UIControlStateNormal];
         [self.previousButton addTarget:self
-                            action:@selector(tabShowPrevious)
-                  forControlEvents:UIControlEventTouchUpInside];
+                                action:@selector(tabShowPrevious)
+                      forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.previousButton];
 
         CGRect frame = self.previousButton.frame;
@@ -473,6 +591,22 @@
         frame.size.width = MOVEMENT_BUTTON_WIDTH;
         frame.size.height = BOTTOM_CORNER_SIZE;
         self.nextButton.frame = frame;
+    }
+
+    {
+        CGRect frame = CGRectZero;
+        frame.origin.x = 2 * (BORDER_SIZE + MOVEMENT_BUTTON_WIDTH);
+        frame.size.width = MENU_BUTTON_WIDTH;
+        frame.size.height = BOTTOM_CORNER_SIZE;
+
+
+        self.menuButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.menuButton.frame = frame;
+        [self.menuButton setTitle:@"Menu" forState:UIControlStateNormal];
+        [self.menuButton addTarget:self
+                            action:@selector(menuButtonPressed)
+                  forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.menuButton];
     }
 
     {
@@ -508,6 +642,49 @@
     }
 }
 
+- (void)createMenuForButtons
+{
+    self.menuArray = [NSMutableArray new];
+}
+
+- (void)createMenuForLogs
+{
+    self.menuArray = [NSMutableArray new];
+
+    [self.menuArray addObject:[DVButtonObject objectWithName:@"Clear current log" handler:^{
+        if (self.visibleLoggerKey) {
+            [self loggerClear:self.visibleLoggerKey];
+            [self menuButtonPressed];
+        }
+    }]];
+
+    [self.menuArray addObject:[DVButtonObject objectWithName:@"Send log to email" handler:^{
+        if (self.visibleLoggerKey) {
+            DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+            if ([logger sendLogsToEmail]) {
+                [self menuButtonPressed];
+                [self windowHide];
+            }
+        }
+    }]];
+}
+
+- (void)deleteMenu
+{
+    self.menuArray = nil;
+}
+
+- (void)updateTableViewFrame
+{
+    CGRect frame = self.tableView.frame;
+    frame.origin.x = BORDER_SIZE;
+    frame.origin.y = BORDER_SIZE + TOP_BORDER_HEIGHT;
+    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
+    frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
+        BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
+    self.tableView.frame = frame;
+}
+
 - (void)updateActivationGestureRecognizer:(UIGestureRecognizer *)recognizer
 {
     id delegate = [UIApplication sharedApplication].delegate;
@@ -526,30 +703,42 @@
     return [[self.dictWithLoggers allKeys] sortedArrayUsingSelector:@selector(compare:)];
 }
 
+- (void)updateAll
+{
+    [self updateTopTitleLabelText];
+    [self.tableView reloadData];
+}
+
 - (void)updateTopTitleLabelText
 {
-    if (self.areButtonsVisible) {
-        self.topTitleLabel.text = @"<<Buttons>>";
+    if ([self isStateMenu]) {
+        self.topTitleLabel.text = @"<<Menu>>";
+        self.topTitleLabel.backgroundColor = [UIColor lightGrayColor];
     }
-    else {
+    else if (self.tableViewState == TableViewStateButtons) {
+        self.topTitleLabel.text = @"<<Buttons>>";
+        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+    }
+    else if (self.tableViewState == TableViewStateLogs) {
         self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
+        self.topTitleLabel.backgroundColor = [UIColor greenColor];
     }
 }
 
-- (void)tabShowNextOrNot:(BOOL)showNext
+- (void)tabShowNextOrPrevious:(BOOL)showNext
 {
     if (! self.dictWithLoggers.count) {
         return;
     }
     NSArray *keys = [self sortedLoggersKeys];
 
-    if (self.areButtonsVisible) {
+    if (self.tableViewState == TableViewStateButtons) {
         NSUInteger index = showNext ? 0 : keys.count-1;
 
         self.visibleLoggerKey = keys[index];
-        self.areButtonsVisible = NO;
+        self.tableViewState = TableViewStateLogs;
     }
-    else {
+    else if (self.tableViewState == TableViewStateLogs) {
         NSInteger index = [keys indexOfObject:self.visibleLoggerKey];
         index += showNext ? 1 : -1;
 
@@ -558,7 +747,7 @@
         }
         else {
             if (self.arrayWithButtons.count) {
-                self.areButtonsVisible = YES;
+                self.tableViewState = TableViewStateButtons;
             }
             else {
                 index = (index < 0) ? keys.count-1 : 0;
@@ -567,8 +756,30 @@
         }
     }
 
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+    [self updateAll];
+}
+
+- (BOOL)isStateButtonsOrMenuButtons
+{
+    return self.tableViewState == TableViewStateButtons ||
+           self.tableViewState == TableViewStateMenuButtons;
+}
+
+- (BOOL)isStateLogOrMenuLog
+{
+    return self.tableViewState == TableViewStateLogs ||
+           self.tableViewState == TableViewStateMenuLogs;
+}
+
+- (BOOL)isStateMenu
+{
+    return self.tableViewState == TableViewStateMenuButtons ||
+           self.tableViewState == TableViewStateMenuLogs;
+}
+
+- (BOOL)isWindowVisible
+{
+    return self.superview != nil;
 }
 
 @end
