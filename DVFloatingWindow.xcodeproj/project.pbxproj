@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1146D9E117B99A350079DE0E /* DVClearButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1146D9E017B99A350079DE0E /* DVClearButton.m */; };
+		116FB18F17BC268300F38AAC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 116FB18E17BC268300F38AAC /* MessageUI.framework */; };
 		2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */; };
 		2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */; };
 		2D889CA917A9CA4500A4F0E6 /* DVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA817A9CA4400A4F0E6 /* DVLogger.m */; };
@@ -32,8 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1146D9DF17B99A350079DE0E /* DVClearButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVClearButton.h; sourceTree = "<group>"; };
-		1146D9E017B99A350079DE0E /* DVClearButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVClearButton.m; sourceTree = "<group>"; };
+		116FB18E17BC268300F38AAC /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		2D28DF5717A1FE4500C0E49B /* DVFloatingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVFloatingWindow.h; sourceTree = "<group>"; };
 		2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVFloatingWindow.m; sourceTree = "<group>"; };
 		2D821CDE17B04B9C00E4B602 /* DVMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVMacros.h; sourceTree = "<group>"; };
@@ -76,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				116FB18F17BC268300F38AAC /* MessageUI.framework in Frameworks */,
 				2DD8D8ED1799D9DF00538E90 /* UIKit.framework in Frameworks */,
 				2DD8D8EF1799D9DF00538E90 /* Foundation.framework in Frameworks */,
 				2DD8D8F11799D9DF00538E90 /* CoreGraphics.framework in Frameworks */,
@@ -107,8 +107,6 @@
 				2D889CA817A9CA4400A4F0E6 /* DVLogger.m */,
 				2D889CAA17A9CB2300A4F0E6 /* DVLoggerConfiguration.h */,
 				2D889CAB17A9CB2300A4F0E6 /* DVLoggerConfiguration.m */,
-				1146D9DF17B99A350079DE0E /* DVClearButton.h */,
-				1146D9E017B99A350079DE0E /* DVClearButton.m */,
 			);
 			name = Files;
 			sourceTree = "<group>";
@@ -133,6 +131,7 @@
 		2DD8D8EB1799D9DF00538E90 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				116FB18E17BC268300F38AAC /* MessageUI.framework */,
 				2DD8D8EC1799D9DF00538E90 /* UIKit.framework */,
 				2DD8D8EE1799D9DF00538E90 /* Foundation.framework */,
 				2DD8D8F01799D9DF00538E90 /* CoreGraphics.framework */,
@@ -265,7 +264,6 @@
 				84B0774317B1480C007E99FD /* DVDefaultLoggerViewController.m in Sources */,
 				84B0774817B1484C007E99FD /* DVLoggerViewController.m in Sources */,
 				84B0774D17B14856007E99FD /* DVButtonsViewController.m in Sources */,
-				1146D9E117B99A350079DE0E /* DVClearButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
