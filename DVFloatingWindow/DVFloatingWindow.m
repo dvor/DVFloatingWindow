@@ -649,12 +649,21 @@ typedef enum
 - (void)createMenuForLogs
 {
     self.menuArray = [NSMutableArray new];
-    __weak typeof(self) weakSelf = self;
 
     [self.menuArray addObject:[DVButtonObject objectWithName:@"Clear current log" handler:^{
-        if (weakSelf.visibleLoggerKey) {
-            [weakSelf loggerClear:weakSelf.visibleLoggerKey];
-            [weakSelf menuButtonPressed];
+        if (self.visibleLoggerKey) {
+            [self loggerClear:self.visibleLoggerKey];
+            [self menuButtonPressed];
+        }
+    }]];
+
+    [self.menuArray addObject:[DVButtonObject objectWithName:@"Send log to email" handler:^{
+        if (self.visibleLoggerKey) {
+            DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
+            if ([logger sendLogsToEmail]) {
+                [self menuButtonPressed];
+                [self windowHide];
+            }
         }
     }]];
 }
