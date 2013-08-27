@@ -59,7 +59,11 @@
 - (NSString *)logAtIndex:(NSUInteger)index
 {
     @synchronized(self) {
-        return self.logsArray[index];
+        if (index < self.logsArray.count) {
+            return self.logsArray[index];
+        }
+
+        return nil;
     }
 }
 
