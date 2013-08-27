@@ -730,28 +730,31 @@ typedef enum
     if (! self.dictWithLoggers.count) {
         return;
     }
-    NSArray *keys = [self sortedLoggersKeys];
 
-    if (self.tableViewState == TableViewStateButtons) {
-        NSUInteger index = showNext ? 0 : keys.count-1;
+    @synchronized(self) {
+        NSArray *keys = [self sortedLoggersKeys];
 
-        self.visibleLoggerKey = keys[index];
-        self.tableViewState = TableViewStateLogs;
-    }
-    else if (self.tableViewState == TableViewStateLogs) {
-        NSInteger index = [keys indexOfObject:self.visibleLoggerKey];
-        index += showNext ? 1 : -1;
+        if (self.tableViewState == TableViewStateButtons) {
+            NSUInteger index = showNext ? 0 : keys.count-1;
 
-        if (index >= 0 && index < keys.count) {
             self.visibleLoggerKey = keys[index];
+            self.tableViewState = TableViewStateLogs;
         }
-        else {
-            if (self.arrayWithButtons.count) {
-                self.tableViewState = TableViewStateButtons;
+        else if (self.tableViewState == TableViewStateLogs) {
+            NSInteger index = [keys indexOfObject:self.visibleLoggerKey];
+            index += showNext ? 1 : -1;
+
+            if (index >= 0 && index < keys.count) {
+                self.visibleLoggerKey = keys[index];
             }
             else {
-                index = (index < 0) ? keys.count-1 : 0;
-                self.visibleLoggerKey = keys[index];
+                if (self.arrayWithButtons.count) {
+                    self.tableViewState = TableViewStateButtons;
+                }
+                else {
+                    index = (index < 0) ? keys.count-1 : 0;
+                    self.visibleLoggerKey = keys[index];
+                }
             }
         }
     }
