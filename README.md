@@ -15,7 +15,7 @@ There are two possible methods to include DVFloatingWindow in your project:
     * Install the pod by running `pod install`
 
 2. Manually: 
-    * Get the [latest version](https://github.com/dvor/DVFloatingWindow/archive/0.2.zip) 
+    * Get the [latest version](https://github.com/dvor/DVFloatingWindow/archive/0.2.1.zip) 
     * Drag files from DVFloatingWindow folder to your project (Check **Add to target** and **Copy items into destination group's folder** checkboxes)
 
 Enable DVFloatingWindow in your `<Project name>-Prefix.pch` file. Import a header file if you want to make it visible all over your project. Don't forget to disable DVFloatingWindow before submitting your app to AppStore!
@@ -25,7 +25,7 @@ Enable DVFloatingWindow in your `<Project name>-Prefix.pch` file. Import a heade
 #define DV_FLOATING_WINDOW_ENABLE 1
 
 // uncomment if you want to make FLoatingWindow accessible all over project
-//#import <DVFloatingWindow/DVFloatingWindow.h>
+//#import "DVFloatingWindow.h"
 ```
 
 # Usage
