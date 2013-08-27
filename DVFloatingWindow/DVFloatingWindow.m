@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Dmitry Vorobyov. All rights reserved.
 //
 
+#import <MessageUI/MessageUI.h>
+
 #import "DVFloatingWindow.h"
 #import "DVLogger.h"
 #import "DVButtonObject.h"
@@ -29,7 +31,8 @@ typedef enum
     TableViewStateLogs
 } TableViewState;
 
-@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
+@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate,
+    MFMailComposeViewControllerDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UILabel *topTitleLabel;
@@ -548,6 +551,15 @@ typedef enum
     return height;
 }
 
+#pragma mark -  MFMailComposeViewController delegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError*)error
+{
+    [[self rootViewController] dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark -  Supporting methods
 
 - (void)createSubviews
@@ -660,11 +672,19 @@ typedef enum
 
     [self.menuArray addObject:[DVButtonObject objectWithName:@"Send log to email" handler:^{
         if (self.visibleLoggerKey) {
-            DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
-            if ([logger sendLogsToEmail]) {
+            NSArray *arrayWithLoggersNames = @[self.visibleLoggerKey];
+
+            if ([self sendLogsToEmailFromLoggersWithNames:arrayWithLoggersNames]) {
                 [self menuButtonPressed];
                 [self windowHide];
             }
+        }
+    }]];
+
+    [self.menuArray addObject:[DVButtonObject objectWithName:@"Send all logs to email" handler:^{
+        if ([self sendLogsToEmailFromLoggersWithNames:[self.dictWithLoggers allKeys]]) {
+            [self menuButtonPressed];
+            [self windowHide];
         }
     }]];
 }
@@ -783,6 +803,59 @@ typedef enum
 - (BOOL)isWindowVisible
 {
     return self.superview != nil;
+}
+
+- (BOOL)sendLogsToEmailFromLoggersWithNames:(NSArray *)arrayWithLoggersNames
+{
+    if ([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *mailVC = [MFMailComposeViewController new];
+        mailVC.mailComposeDelegate = self;
+        [mailVC setSubject:@"Logs"];
+
+        for (NSString *loggerKey in arrayWithLoggersNames) {
+            DVLogger *logger = self.dictWithLoggers[loggerKey];
+            NSData *data = [logger logsToData];
+
+            if (data) {
+                [mailVC addAttachmentData:data
+                                 mimeType:@"text/plain"
+                                 fileName:[self logFilenameFromString:loggerKey]];
+            }
+        }
+
+
+        [[self rootViewController] presentViewController:mailVC
+                                                animated:YES
+                                              completion:nil];
+
+        return YES;
+    }
+    else {
+        UIAlertView *alertView = [[UIAlertView alloc] 
+            initWithTitle:@"Error"
+                  message:@"Please configure your mail settings"
+                 delegate:nil
+        cancelButtonTitle:@"OK"
+        otherButtonTitles:nil];
+
+        [alertView show];
+
+        return NO;
+    }
+}
+
+- (NSString *)logFilenameFromString:(NSString *)string
+{
+    NSCharacterSet *illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
+    string = [[string componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@""];
+
+    return [NSString stringWithFormat:@"%@.txt", string];
+}
+
+- (UIViewController *)rootViewController
+{
+    id delegate = [UIApplication sharedApplication].delegate;
+    return [[delegate window] rootViewController];
 }
 
 @end
