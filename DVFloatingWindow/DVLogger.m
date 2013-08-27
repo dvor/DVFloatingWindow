@@ -6,11 +6,9 @@
 //  Copyright (c) 2013 Dmitry Vorobyov. All rights reserved.
 //
 
-#import <MessageUI/MessageUI.h>
-
 #import "DVLogger.h"
 
-@interface DVLogger() <MFMailComposeViewControllerDelegate>
+@interface DVLogger()
 
 @property (strong, nonatomic) NSMutableArray *logsArray;
 
@@ -72,53 +70,6 @@
     @synchronized(self) {
         self.logsArray = [NSMutableArray new];
     }
-}
-
-- (BOOL)sendLogsToEmail
-{
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailVC = [MFMailComposeViewController new];
-        mailVC.mailComposeDelegate = self;
-        [mailVC setSubject:@"Logs"];
-        [mailVC addAttachmentData:[self logsToData]
-                         mimeType:@"text/plain"
-                         fileName:@"logs.txt"];
-
-        [[self rootViewController] presentViewController:mailVC
-                                                animated:YES
-                                              completion:nil];
-
-        return YES;
-    }
-    else {
-        UIAlertView *alertView = [[UIAlertView alloc] 
-            initWithTitle:@"Error"
-                  message:@"Please configure your mail settings"
-                 delegate:nil
-        cancelButtonTitle:@"OK"
-        otherButtonTitles:nil];
-
-        [alertView show];
-
-        return NO;
-    }
-}
-
-#pragma mark -  MFMailComposeViewController delegate
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError*)error
-{
-    [[self rootViewController] dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark -  Supporting methods
-
-- (UIViewController *)rootViewController
-{
-    id delegate = [UIApplication sharedApplication].delegate;
-    return [[delegate window] rootViewController];
 }
 
 - (NSData *)logsToData
