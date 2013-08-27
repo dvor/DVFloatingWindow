@@ -1,3 +1,14 @@
+## 0.2.1
+
+###### Enhancements
+
+- Button for sending all logs via email
+
+###### Bugfixes
+
+- Fixed crashes on tab changing and sending log to email
+- Added empty macro DVButtonAdd (in case if DVFloatingWindow is disabled)
+
 ## 0.2
 
 ###### Enhancements

@@ -69,6 +69,8 @@
      #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) 
      
      #define DVLoggerLog(loggerKey, format, ...) 
+
+     #define DVButtonAdd(title, theHandler) 
      
 #endif
 
