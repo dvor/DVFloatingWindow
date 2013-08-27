@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dvor/DVFloatingWindow.png?branch=master)](https://travis-ci.org/dvor/DVFloatingWindow)
+[![Build Status](https://travis-ci.org/dvor/DVFloatingWindow.png?branch=development)](https://travis-ci.org/dvor/DVFloatingWindow)
 
 DVFloatingWindow is a simple and effective tool for reviewing your application logs just from within. 
 
