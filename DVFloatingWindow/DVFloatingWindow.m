@@ -466,6 +466,7 @@ typedef enum
     else if (self.tableViewState == TableViewStateButtons) {
         DVButtonObject *object = self.arrayWithButtons[indexPath.row];
         cell.textLabel.text = object.name;
+        cell.textLabel.font = [UIFont systemFontOfSize:13.0];
     }
     else if (self.tableViewState == TableViewStateLogs) {
         DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
