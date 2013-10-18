@@ -15,6 +15,10 @@
 
 + (DVFloatingWindow *)sharedInstance;
 
+@end
+
+
+@interface DVFloatingWindow(Window)
 
 /**
  * Show the window if it's hidden.
@@ -52,6 +56,10 @@
 - (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
                               minimumPressDuration:(CFTimeInterval)minimumPressDuration;
 
+@end
+
+
+@interface DVFloatingWindow(Tabs)
 
 /**
  * Switch to previous or next tabs. This action is similar to pressing previous/next
@@ -76,6 +84,10 @@
  */
 - (void)tabSwitchToButtonsTab;
 
+@end
+
+
+@interface DVFloatingWindow(Logger)
 
 /**
  * Create logger with NSString as a key (identifier). Only after logger was created it can
@@ -129,6 +141,10 @@
 - (void)loggerLogToLogger:(NSString *)loggerKey
                       log:(NSString *)format,...;
 
+@end
+
+
+@interface DVFloatingWindow(Buttons)
 
 /**
  * Add a button with handler to buttons tab. When the button is pressed, handler is called
