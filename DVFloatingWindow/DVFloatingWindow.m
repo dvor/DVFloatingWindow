@@ -395,6 +395,19 @@ typedef enum
     }
 }
 
+#pragma mark -  Methods configuration
+
+- (void)setConfigFrame:(CGRect)configFrame
+{
+    self.frame = configFrame;
+    [self updateTableViewFrame];
+}
+
+- (CGRect)configFrame
+{
+    return self.frame;
+}
+
 #pragma mark -  Gestures
 
 - (void)activateGesture:(UIGestureRecognizer *)recognizer

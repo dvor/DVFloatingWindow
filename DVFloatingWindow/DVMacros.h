@@ -46,6 +46,8 @@
     #define DVButtonAdd(title, theHandler) \
           [[DVFloatingWindow sharedInstance] buttonAddWithTitle:title handler:theHandler]
 
+    #define DVConfigFrameGet() [DVFloatingWindow sharedInstance].configFrame
+    #define DVConfigFrameSet(frame) [[DVFloatingWindow sharedInstance] setConfigFrame:frame]
 
 #else
 
@@ -71,6 +73,9 @@
      #define DVLoggerLog(loggerKey, format, ...) 
 
      #define DVButtonAdd(title, theHandler) 
+
+    #define DVConfigFrameGet() 
+    #define DVConfigFrameSet(frame) 
      
 #endif
 

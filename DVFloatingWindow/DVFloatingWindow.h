@@ -159,3 +159,18 @@
                    handler:(DVFloatingWindowButtonHandler)handler;
 
 @end
+
+
+@interface DVFloatingWindow(Config)
+
+/**
+ * This property is used to get or set window frame.
+ *
+ * !!! Please use this property instead of UIView `frame` property
+ *
+ * Corresponding macro - DVConfigFrameGet()
+ *                       DVConfigFrameSet(frame)
+ */
+@property (assign, nonatomic) CGRect configFrame;
+
+@end
