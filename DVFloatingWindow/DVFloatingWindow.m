@@ -50,6 +50,15 @@ typedef enum
 
 @property (strong, nonatomic) UIGestureRecognizer *activateRecognizer;
 
+
+// properties from h file
+@property (assign, nonatomic) CGRect configFrame;
+@property (strong, nonatomic) UIColor *configBackroundColor;
+@property (strong, nonatomic) UIColor *configTopBGColor;
+@property (strong, nonatomic) UIColor *configTopMenuBGColor;
+@property (strong, nonatomic) UIColor *configTopFontColor;
+@property (strong, nonatomic) UIColor *configRightCornerColor;
+
 @end
 
 
@@ -67,11 +76,14 @@ typedef enum
     if (self = [super initWithFrame:CGRectZero]) {
         [self createSubviews];
 
-        self.frame = CGRectMake(0, 100, 100, 100);
-        self.backgroundColor = [UIColor lightGrayColor];
-        self.clipsToBounds = YES;
+        self.configFrame = CGRectMake(0, 100, 100, 100);
+        self.configBackroundColor = [UIColor lightGrayColor];
+        self.configTopBGColor = [UIColor greenColor];
+        self.configTopMenuBGColor = [UIColor lightGrayColor];
+        self.configTopTextColor = [UIColor blackColor];
+        self.configRightCornerColor = [UIColor yellowColor];
 
-        [self updateTableViewFrame];
+        self.clipsToBounds = YES;
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
@@ -408,6 +420,56 @@ typedef enum
     return self.frame;
 }
 
+- (void)setConfigBackroundColor:(UIColor *)color
+{
+    self.backgroundColor = color;
+}
+
+- (UIColor *)configBackroundColor
+{
+    return self.backgroundColor;
+}
+
+- (void)setConfigTopBGColor:(UIColor *)color
+{
+    _configTopBGColor = color;
+
+    if (! [self isStateMenu])
+    {
+        self.topTitleLabel.backgroundColor = color;
+    }
+}
+
+- (void)setConfigTopMenuBGColor:(UIColor *)color;
+{
+    _configTopMenuBGColor = color;
+
+    if ([self isStateMenu])
+    {
+        self.topTitleLabel.backgroundColor = color;
+    }
+}
+
+- (void)setConfigTopTextColor:(UIColor *)color
+{
+    self.topTitleLabel.textColor = color;
+}
+
+- (UIColor *)configTopTextColor
+{
+    return self.topTitleLabel.textColor;
+}
+
+- (void)setConfigRightCornerColor:(UIColor *)color
+{
+    self.bottomCorner.backgroundColor = color;
+}
+
+- (UIColor *)configRightCornerColor
+{
+    return self.bottomCorner.backgroundColor;
+}
+
 #pragma mark -  Gestures
 
 - (void)activateGesture:(UIGestureRecognizer *)recognizer
@@ -642,9 +704,7 @@ typedef enum
 
         self.topTitleLabel = [[UILabel alloc] initWithFrame:frame];
         self.topTitleLabel.userInteractionEnabled = YES;
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
         self.topTitleLabel.font = [UIFont systemFontOfSize:13.0];
-        self.topTitleLabel.textColor = [UIColor blackColor];
         self.topTitleLabel.textAlignment = NSTextAlignmentCenter;
         self.topTitleLabel.text = @"<<Buttons>>";
         [self addSubview:self.topTitleLabel];
@@ -659,7 +719,6 @@ typedef enum
         frame.size.width = frame.size.height = BOTTOM_CORNER_SIZE;
 
         self.bottomCorner = [[UIView alloc] initWithFrame:frame];
-        self.bottomCorner.backgroundColor = [UIColor yellowColor];
         [self addSubview:self.bottomCorner];
 
         UIPanGestureRecognizer *bottomPanGR = [[UIPanGestureRecognizer alloc]
@@ -747,15 +806,15 @@ typedef enum
 {
     if ([self isStateMenu]) {
         self.topTitleLabel.text = @"<<Menu>>";
-        self.topTitleLabel.backgroundColor = [UIColor lightGrayColor];
+        self.topTitleLabel.backgroundColor = self.configTopMenuBGColor;
     }
     else if (self.tableViewState == TableViewStateButtons) {
         self.topTitleLabel.text = @"<<Buttons>>";
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.backgroundColor = self.configTopBGColor;
     }
     else if (self.tableViewState == TableViewStateLogs) {
         self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.backgroundColor = self.configTopBGColor;
     }
 }
 

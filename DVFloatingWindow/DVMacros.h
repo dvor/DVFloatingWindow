@@ -49,6 +49,18 @@
     #define DVConfigFrameGet() [DVFloatingWindow sharedInstance].configFrame
     #define DVConfigFrameSet(frame) [[DVFloatingWindow sharedInstance] setConfigFrame:frame]
 
+    #define DVConfigBackgroundColorGet()  [DVFloatingWindow sharedInstance].backgroundColor
+    #define DVConfigTopBGColorGet()       [DVFloatingWindow sharedInstance].configTopBGColor
+    #define DVConfigTopMenuBGColorGet()   [DVFloatingWindow sharedInstance].configTopMenuBGColor
+    #define DVConfigTopTextColorGet()     [DVFloatingWindow sharedInstance].configTopTextColor
+    #define DVConfigRightCornerColorGet() [DVFloatingWindow sharedInstance].configRightCornerColor
+
+    #define DVConfigBackgroundColorSet(color)  [[DVFloatingWindow sharedInstance] setConfigBackroundColor:color]
+    #define DVConfigTopBGColorSet(color)       [[DVFloatingWindow sharedInstance] setConfigTopBGColor:color]
+    #define DVConfigTopMenuBGColorSet(color)   [[DVFloatingWindow sharedInstance] setConfigTopMenuBGColor:color]
+    #define DVConfigTopTextColorSet(color)     [[DVFloatingWindow sharedInstance] setConfigTopTextColor:color]
+    #define DVConfigRightCornerColorSet(color) [[DVFloatingWindow sharedInstance] setConfigRightCornerColor:color]
+
 #else
 
      #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 
@@ -76,6 +88,18 @@
 
     #define DVConfigFrameGet() 
     #define DVConfigFrameSet(frame) 
+
+    #define DVConfigBackgroundColorGet() 
+    #define DVConfigTopBGColorGet() 
+    #define DVConfigTopMenuBGColorGet() 
+    #define DVConfigTopTextColorGet() 
+    #define DVConfigRightCornerColorGet() 
+
+    #define DVConfigBackgroundColorSet(color) 
+    #define DVConfigTopBGColorSet(color) 
+    #define DVConfigTopMenuBGColorSet(color) 
+    #define DVConfigTopTextColorSet(color) 
+    #define DVConfigRightCornerColorSet(color) 
      
 #endif
 

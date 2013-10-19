@@ -164,7 +164,7 @@
 @interface DVFloatingWindow(Config)
 
 /**
- * This property is used to get or set window frame.
+ * This property is used to get or change window frame.
  *
  * !!! Please use this property instead of UIView `frame` property
  *
@@ -172,5 +172,39 @@
  *                       DVConfigFrameSet(frame)
  */
 @property (assign, nonatomic) CGRect configFrame;
+
+/**
+ * Properties below are used to get or change window colors
+ */
+
+/**
+ * Corresponding macro - DVConfigBackgroundColorGet()
+ *                       DVConfigBackgroundColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configBackroundColor;
+
+/**
+ * Corresponding macro - DVConfigTopBGColorGet()
+ *                       DVConfigTopBGColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopBGColor;
+
+/**
+ * Corresponding macro - DVConfigTopMenuBGColorGet()
+ *                       DVConfigTopMenuBGColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopMenuBGColor;
+
+/**
+ * Corresponding macro - DVConfigTopTextColorGet()
+ *                       DVConfigTopTextColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopTextColor;
+
+/**
+ * Corresponding macro - DVConfigRightCornerColorGet()
+ *                       DVConfigRightCornerColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configRightCornerColor;
 
 @end
