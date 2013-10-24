@@ -6,11 +6,10 @@
 //  Copyright (c) 2013 Dmitry Vorobyov. All rights reserved.
 //
 
-#import <MessageUI/MessageUI.h>
-
 #import "DVFloatingWindow.h"
 #import "DVLogger.h"
 #import "DVButtonObject.h"
+#import "DVEmailManager.h"
 
 #define BORDER_SIZE 2
 #define TOP_BORDER_HEIGHT 30
@@ -31,8 +30,7 @@ typedef enum
     TableViewStateLogs
 } TableViewState;
 
-@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate,
-    MFMailComposeViewControllerDelegate>
+@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UILabel *topTitleLabel;
@@ -49,6 +47,8 @@ typedef enum
 @property (strong, nonatomic) NSString *visibleLoggerKey;
 
 @property (strong, nonatomic) UIGestureRecognizer *activateRecognizer;
+
+@property (strong, nonatomic) DVEmailManager *emailManager;
 
 
 // properties from h file
@@ -627,13 +627,15 @@ typedef enum
     return height;
 }
 
-#pragma mark -  MFMailComposeViewController delegate
+#pragma mark -  Properties
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError*)error
+- (DVEmailManager *)emailManager
 {
-    [[self rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    if (! _emailManager) {
+        _emailManager = [DVEmailManager new];
+    }
+
+    return _emailManager;
 }
 
 #pragma mark -  Supporting methods
@@ -880,55 +882,18 @@ typedef enum
 
 - (BOOL)sendLogsToEmailFromLoggersWithNames:(NSArray *)arrayWithLoggersNames
 {
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailVC = [MFMailComposeViewController new];
-        mailVC.mailComposeDelegate = self;
-        [mailVC setSubject:@"Logs"];
+    NSMutableDictionary *loggers = [NSMutableDictionary new];
 
-        for (NSString *loggerKey in arrayWithLoggersNames) {
-            DVLogger *logger = self.dictWithLoggers[loggerKey];
-            NSData *data = [logger logsToData];
+    for (NSString *loggerKey in arrayWithLoggersNames) {
+        DVLogger *l = self.dictWithLoggers[loggerKey];
 
-            if (data) {
-                [mailVC addAttachmentData:data
-                                 mimeType:@"text/plain"
-                                 fileName:[self logFilenameFromString:loggerKey]];
-            }
+        if (l) {
+            loggers[loggerKey] = l;
         }
-
-
-        [[self rootViewController] presentViewController:mailVC
-                                                animated:YES
-                                              completion:nil];
-
-        return YES;
     }
-    else {
-        UIAlertView *alertView = [[UIAlertView alloc] 
-            initWithTitle:@"Error"
-                  message:@"Please configure your mail settings"
-                 delegate:nil
-        cancelButtonTitle:@"OK"
-        otherButtonTitles:nil];
 
-        [alertView show];
-
-        return NO;
-    }
-}
-
-- (NSString *)logFilenameFromString:(NSString *)string
-{
-    NSCharacterSet *illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
-    string = [[string componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@""];
-
-    return [NSString stringWithFormat:@"%@.txt", string];
-}
-
-- (UIViewController *)rootViewController
-{
-    id delegate = [UIApplication sharedApplication].delegate;
-    return [[delegate window] rootViewController];
+    return loggers.count ? 
+        [self.emailManager sendLogsToEmailFromLoggers:loggers] : NO;
 }
 
 @end
