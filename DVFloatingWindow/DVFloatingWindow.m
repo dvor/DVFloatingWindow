@@ -16,6 +16,7 @@
 #define BOTTOM_CORNER_SIZE 30
 #define MOVEMENT_BUTTON_WIDTH 30
 #define MENU_BUTTON_WIDTH 60
+#define AUTOSCROLL_BUTTON_WIDTH 60
 
 #define MIN_ORIGIN_Y 20
 #define MIN_VISIBLE_SIZE 30
@@ -38,6 +39,7 @@ typedef enum
 @property (strong, nonatomic) UIButton *previousButton;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) UIButton *menuButton;
+@property (strong, nonatomic) UIButton *autoscrollButton;
 
 @property (strong, nonatomic) NSMutableArray *menuArray;
 @property (strong, nonatomic) NSMutableArray *arrayWithButtons;
@@ -152,6 +154,10 @@ typedef enum
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.menuButton.frame = frame;
 
+    frame = self.autoscrollButton.frame;
+    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
+    self.autoscrollButton.frame = frame;
+
     frame = self.topTitleLabel.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     self.topTitleLabel.frame = frame;
@@ -201,6 +207,11 @@ typedef enum
 
     [self updateTopTitleLabelText];
     [self.tableView reloadData];
+}
+
+- (void)autoscrollButtonPressed
+{
+    self.autoscrollButton.selected = ! self.autoscrollButton.selected;
 }
 
 #pragma mark -  Methods window
@@ -366,13 +377,16 @@ typedef enum
             [self.tableView insertRowsAtIndexPaths:@[path]
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
 
-            if (logger.configuration.scrollToNewMessage) {
+            if (self.autoscrollButton.selected) {
                 UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
                     UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
 
                 [self.tableView scrollToRowAtIndexPath:path
                                       atScrollPosition:scrollPosition
                                               animated:YES];
+            }
+            else {
+                [self.tableView flashScrollIndicators];
             }
         }
     }
@@ -712,6 +726,25 @@ typedef enum
                             action:@selector(menuButtonPressed)
                   forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.menuButton];
+    }
+
+    {
+        CGRect frame = CGRectZero;
+        frame.origin.x = 2 * (BORDER_SIZE + MOVEMENT_BUTTON_WIDTH) + MENU_BUTTON_WIDTH;
+        frame.size.width = AUTOSCROLL_BUTTON_WIDTH;
+        frame.size.height = BOTTOM_CORNER_SIZE;
+
+
+        self.autoscrollButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.autoscrollButton.selected = YES;
+        self.autoscrollButton.frame = frame;
+        self.autoscrollButton.titleLabel.font = [UIFont systemFontOfSize:9.0];
+        [self.autoscrollButton setTitle:@"✗ autoscroll" forState:UIControlStateNormal];
+        [self.autoscrollButton setTitle:@"✓ autoscroll" forState:UIControlStateSelected];
+        [self.autoscrollButton addTarget:self
+                            action:@selector(autoscrollButtonPressed)
+                  forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.autoscrollButton];
     }
 
     {
