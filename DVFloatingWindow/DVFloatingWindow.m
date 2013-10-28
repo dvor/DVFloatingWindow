@@ -6,11 +6,10 @@
 //  Copyright (c) 2013 Dmitry Vorobyov. All rights reserved.
 //
 
-#import <MessageUI/MessageUI.h>
-
 #import "DVFloatingWindow.h"
 #import "DVLogger.h"
 #import "DVButtonObject.h"
+#import "DVEmailManager.h"
 
 #define BORDER_SIZE 2
 #define TOP_BORDER_HEIGHT 30
@@ -31,8 +30,7 @@ typedef enum
     TableViewStateLogs
 } TableViewState;
 
-@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate,
-    MFMailComposeViewControllerDelegate>
+@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UILabel *topTitleLabel;
@@ -49,6 +47,23 @@ typedef enum
 @property (strong, nonatomic) NSString *visibleLoggerKey;
 
 @property (strong, nonatomic) UIGestureRecognizer *activateRecognizer;
+
+@property (strong, nonatomic) DVEmailManager *emailManager;
+
+
+// properties from h file
+@property (assign, nonatomic) CGRect configFrame;
+@property (strong, nonatomic) UIColor *configBackroundColor;
+@property (strong, nonatomic) UIColor *configTopBGColor;
+@property (strong, nonatomic) UIColor *configTopMenuBGColor;
+@property (strong, nonatomic) UIColor *configTopFontColor;
+@property (strong, nonatomic) UIColor *configRightCornerColor;
+@property (strong, nonatomic) NSString *configEmailSubject;
+@property (strong, nonatomic) NSArray *configEmailToRecipients;
+@property (strong, nonatomic) NSArray *configEmailCcRecipients;
+@property (strong, nonatomic) NSArray *configEmailBccRecipients;
+@property (strong, nonatomic) NSString *configEmailMessageBody;
+@property (assign, nonatomic) BOOL configEmailIsMessageBodyHTML;
 
 @end
 
@@ -67,11 +82,14 @@ typedef enum
     if (self = [super initWithFrame:CGRectZero]) {
         [self createSubviews];
 
-        self.frame = CGRectMake(0, 100, 100, 100);
-        self.backgroundColor = [UIColor lightGrayColor];
-        self.clipsToBounds = YES;
+        self.configFrame = CGRectMake(0, 100, 100, 100);
+        self.configBackroundColor = [UIColor lightGrayColor];
+        self.configTopBGColor = [UIColor greenColor];
+        self.configTopMenuBGColor = [UIColor lightGrayColor];
+        self.configTopTextColor = [UIColor blackColor];
+        self.configRightCornerColor = [UIColor yellowColor];
 
-        [self updateTableViewFrame];
+        self.clipsToBounds = YES;
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
@@ -395,6 +413,69 @@ typedef enum
     }
 }
 
+#pragma mark -  Methods configuration
+
+- (void)setConfigFrame:(CGRect)configFrame
+{
+    self.frame = configFrame;
+    [self updateTableViewFrame];
+}
+
+- (CGRect)configFrame
+{
+    return self.frame;
+}
+
+- (void)setConfigBackroundColor:(UIColor *)color
+{
+    self.backgroundColor = color;
+}
+
+- (UIColor *)configBackroundColor
+{
+    return self.backgroundColor;
+}
+
+- (void)setConfigTopBGColor:(UIColor *)color
+{
+    _configTopBGColor = color;
+
+    if (! [self isStateMenu])
+    {
+        self.topTitleLabel.backgroundColor = color;
+    }
+}
+
+- (void)setConfigTopMenuBGColor:(UIColor *)color;
+{
+    _configTopMenuBGColor = color;
+
+    if ([self isStateMenu])
+    {
+        self.topTitleLabel.backgroundColor = color;
+    }
+}
+
+- (void)setConfigTopTextColor:(UIColor *)color
+{
+    self.topTitleLabel.textColor = color;
+}
+
+- (UIColor *)configTopTextColor
+{
+    return self.topTitleLabel.textColor;
+}
+
+- (void)setConfigRightCornerColor:(UIColor *)color
+{
+    self.bottomCorner.backgroundColor = color;
+}
+
+- (UIColor *)configRightCornerColor
+{
+    return self.bottomCorner.backgroundColor;
+}
+
 #pragma mark -  Gestures
 
 - (void)activateGesture:(UIGestureRecognizer *)recognizer
@@ -552,13 +633,24 @@ typedef enum
     return height;
 }
 
-#pragma mark -  MFMailComposeViewController delegate
+#pragma mark -  Properties
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError*)error
+- (DVEmailManager *)emailManager
 {
-    [[self rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    if (! _emailManager) {
+        _emailManager = [DVEmailManager new];
+    }
+
+    return _emailManager;
+}
+
+- (NSString *)configEmailSubject
+{
+    if (! _configEmailSubject) {
+        _configEmailSubject = @"Logs";
+    }
+
+    return _configEmailSubject;
 }
 
 #pragma mark -  Supporting methods
@@ -629,9 +721,7 @@ typedef enum
 
         self.topTitleLabel = [[UILabel alloc] initWithFrame:frame];
         self.topTitleLabel.userInteractionEnabled = YES;
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
         self.topTitleLabel.font = [UIFont systemFontOfSize:13.0];
-        self.topTitleLabel.textColor = [UIColor blackColor];
         self.topTitleLabel.textAlignment = NSTextAlignmentCenter;
         self.topTitleLabel.text = @"<<Buttons>>";
         [self addSubview:self.topTitleLabel];
@@ -646,7 +736,6 @@ typedef enum
         frame.size.width = frame.size.height = BOTTOM_CORNER_SIZE;
 
         self.bottomCorner = [[UIView alloc] initWithFrame:frame];
-        self.bottomCorner.backgroundColor = [UIColor yellowColor];
         [self addSubview:self.bottomCorner];
 
         UIPanGestureRecognizer *bottomPanGR = [[UIPanGestureRecognizer alloc]
@@ -734,15 +823,15 @@ typedef enum
 {
     if ([self isStateMenu]) {
         self.topTitleLabel.text = @"<<Menu>>";
-        self.topTitleLabel.backgroundColor = [UIColor lightGrayColor];
+        self.topTitleLabel.backgroundColor = self.configTopMenuBGColor;
     }
     else if (self.tableViewState == TableViewStateButtons) {
         self.topTitleLabel.text = @"<<Buttons>>";
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.backgroundColor = self.configTopBGColor;
     }
     else if (self.tableViewState == TableViewStateLogs) {
         self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.backgroundColor = self.configTopBGColor;
     }
 }
 
@@ -808,55 +897,28 @@ typedef enum
 
 - (BOOL)sendLogsToEmailFromLoggersWithNames:(NSArray *)arrayWithLoggersNames
 {
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailVC = [MFMailComposeViewController new];
-        mailVC.mailComposeDelegate = self;
-        [mailVC setSubject:@"Logs"];
+    NSMutableDictionary *loggers = [NSMutableDictionary new];
 
-        for (NSString *loggerKey in arrayWithLoggersNames) {
-            DVLogger *logger = self.dictWithLoggers[loggerKey];
-            NSData *data = [logger logsToData];
+    for (NSString *loggerKey in arrayWithLoggersNames) {
+        DVLogger *l = self.dictWithLoggers[loggerKey];
 
-            if (data) {
-                [mailVC addAttachmentData:data
-                                 mimeType:@"text/plain"
-                                 fileName:[self logFilenameFromString:loggerKey]];
-            }
+        if (l) {
+            loggers[loggerKey] = l;
         }
+    }
 
-
-        [[self rootViewController] presentViewController:mailVC
-                                                animated:YES
-                                              completion:nil];
-
-        return YES;
+    if (loggers.count) {
+        return [self.emailManager sendLogsToEmailFromLoggers:loggers
+                                                     subject:self.configEmailSubject
+                                                toRecipients:self.configEmailToRecipients
+                                                ccRecipients:self.configEmailCcRecipients
+                                               bccRecipients:self.configEmailBccRecipients
+                                                 messageBody:self.configEmailMessageBody
+                                           isMessageBodyHTML:self.configEmailIsMessageBodyHTML];
     }
     else {
-        UIAlertView *alertView = [[UIAlertView alloc] 
-            initWithTitle:@"Error"
-                  message:@"Please configure your mail settings"
-                 delegate:nil
-        cancelButtonTitle:@"OK"
-        otherButtonTitles:nil];
-
-        [alertView show];
-
         return NO;
     }
-}
-
-- (NSString *)logFilenameFromString:(NSString *)string
-{
-    NSCharacterSet *illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
-    string = [[string componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@""];
-
-    return [NSString stringWithFormat:@"%@.txt", string];
-}
-
-- (UIViewController *)rootViewController
-{
-    id delegate = [UIApplication sharedApplication].delegate;
-    return [[delegate window] rootViewController];
 }
 
 @end

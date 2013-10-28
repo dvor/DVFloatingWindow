@@ -46,6 +46,34 @@
     #define DVButtonAdd(title, theHandler) \
           [[DVFloatingWindow sharedInstance] buttonAddWithTitle:title handler:theHandler]
 
+    #define DVConfigFrameGet() [DVFloatingWindow sharedInstance].configFrame
+    #define DVConfigFrameSet(frame) [[DVFloatingWindow sharedInstance] setConfigFrame:frame]
+
+    #define DVConfigBackgroundColorGet()  [DVFloatingWindow sharedInstance].backgroundColor
+    #define DVConfigTopBGColorGet()       [DVFloatingWindow sharedInstance].configTopBGColor
+    #define DVConfigTopMenuBGColorGet()   [DVFloatingWindow sharedInstance].configTopMenuBGColor
+    #define DVConfigTopTextColorGet()     [DVFloatingWindow sharedInstance].configTopTextColor
+    #define DVConfigRightCornerColorGet() [DVFloatingWindow sharedInstance].configRightCornerColor
+
+    #define DVConfigBackgroundColorSet(color)  [[DVFloatingWindow sharedInstance] setConfigBackroundColor:color]
+    #define DVConfigTopBGColorSet(color)       [[DVFloatingWindow sharedInstance] setConfigTopBGColor:color]
+    #define DVConfigTopMenuBGColorSet(color)   [[DVFloatingWindow sharedInstance] setConfigTopMenuBGColor:color]
+    #define DVConfigTopTextColorSet(color)     [[DVFloatingWindow sharedInstance] setConfigTopTextColor:color]
+    #define DVConfigRightCornerColorSet(color) [[DVFloatingWindow sharedInstance] setConfigRightCornerColor:color]
+
+    #define DVConfigEmailSubjectGet()           [DVFloatingWindow sharedInstance].configEmailSubject
+    #define DVConfigEmailToRecipientsGet()      [DVFloatingWindow sharedInstance].configEmailToRecipients
+    #define DVConfigEmailCcRecipientsGet()      [DVFloatingWindow sharedInstance].configEmailCcRecipients
+    #define DVConfigEmailBccRecipientsGet()     [DVFloatingWindow sharedInstance].configEmailBccRecipients
+    #define DVConfigEmailMessageBodyGet()       [DVFloatingWindow sharedInstance].configEmailMessageBody
+    #define DVConfigEmailIsMessageBodyHTMLGet() [DVFloatingWindow sharedInstance].configEmailIsMessageBodyHTML
+
+    #define DVConfigEmailSubjectSet(subject)                     [[DVFloatingWindow sharedInstance] setConfigEmailSubject:subject]
+    #define DVConfigEmailToRecipientsSet(toRecipients)           [[DVFloatingWindow sharedInstance] setConfigEmailToRecipients:toRecipients]
+    #define DVConfigEmailCcRecipientsSet(ccRecipients)           [[DVFloatingWindow sharedInstance] setConfigEmailCcRecipients:ccRecipients]
+    #define DVConfigEmailBccRecipientsSet(bccRecipients)         [[DVFloatingWindow sharedInstance] setConfigEmailBccRecipients:bccRecipients]
+    #define DVConfigEmailMessageBodySet(messageBody)             [[DVFloatingWindow sharedInstance] setConfigEmailMessageBody:messageBody]
+    #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML) [[DVFloatingWindow sharedInstance] setConfigEmailIsMessageBodyHTML:isMessageBodyHTML]
 
 #else
 
@@ -71,6 +99,35 @@
      #define DVLoggerLog(loggerKey, format, ...) 
 
      #define DVButtonAdd(title, theHandler) 
+
+    #define DVConfigFrameGet() 
+    #define DVConfigFrameSet(frame) 
+
+    #define DVConfigBackgroundColorGet() 
+    #define DVConfigTopBGColorGet() 
+    #define DVConfigTopMenuBGColorGet() 
+    #define DVConfigTopTextColorGet() 
+    #define DVConfigRightCornerColorGet() 
+
+    #define DVConfigBackgroundColorSet(color) 
+    #define DVConfigTopBGColorSet(color) 
+    #define DVConfigTopMenuBGColorSet(color) 
+    #define DVConfigTopTextColorSet(color) 
+    #define DVConfigRightCornerColorSet(color) 
+
+    #define DVConfigEmailSubjectGet()
+    #define DVConfigEmailToRecipientsGet()
+    #define DVConfigEmailCcRecipientsGet()
+    #define DVConfigEmailBccRecipientsGet()
+    #define DVConfigEmailMessageBodyGet()
+    #define DVConfigEmailIsMessageBodyHTMLGet()
+
+    #define DVConfigEmailSubjectSet(subject)
+    #define DVConfigEmailToRecipientsSet(toRecipients)
+    #define DVConfigEmailCcRecipientsSet(ccRecipients)
+    #define DVConfigEmailBccRecipientsSet(bccRecipients)
+    #define DVConfigEmailMessageBodySet(messageBody)
+    #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML)
      
 #endif
 

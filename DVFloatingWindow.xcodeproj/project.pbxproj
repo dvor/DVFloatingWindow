@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		116FB18F17BC268300F38AAC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 116FB18E17BC268300F38AAC /* MessageUI.framework */; };
 		2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */; };
+		2D6F3D04181718FA0005831E /* DVEmailManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D6F3D03181718FA0005831E /* DVEmailManager.m */; };
 		2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */; };
 		2D889CA917A9CA4500A4F0E6 /* DVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CA817A9CA4400A4F0E6 /* DVLogger.m */; };
 		2D889CAC17A9CB2300A4F0E6 /* DVLoggerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D889CAB17A9CB2300A4F0E6 /* DVLoggerConfiguration.m */; };
@@ -35,6 +36,8 @@
 		116FB18E17BC268300F38AAC /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		2D28DF5717A1FE4500C0E49B /* DVFloatingWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVFloatingWindow.h; sourceTree = "<group>"; };
 		2D28DF5817A1FE4500C0E49B /* DVFloatingWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVFloatingWindow.m; sourceTree = "<group>"; };
+		2D6F3D02181718FA0005831E /* DVEmailManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVEmailManager.h; sourceTree = "<group>"; };
+		2D6F3D03181718FA0005831E /* DVEmailManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVEmailManager.m; sourceTree = "<group>"; };
 		2D821CDE17B04B9C00E4B602 /* DVMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVMacros.h; sourceTree = "<group>"; };
 		2D889C9F17A9BAA100A4F0E6 /* DVButtonObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVButtonObject.h; sourceTree = "<group>"; };
 		2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVButtonObject.m; sourceTree = "<group>"; };
@@ -103,6 +106,8 @@
 				2D889C9F17A9BAA100A4F0E6 /* DVButtonObject.h */,
 				2D889CA017A9BAA100A4F0E6 /* DVButtonObject.m */,
 				2D889CA317A9BAA100A4F0E6 /* DVDefinitions.h */,
+				2D6F3D02181718FA0005831E /* DVEmailManager.h */,
+				2D6F3D03181718FA0005831E /* DVEmailManager.m */,
 				2D889CA717A9CA4400A4F0E6 /* DVLogger.h */,
 				2D889CA817A9CA4400A4F0E6 /* DVLogger.m */,
 				2D889CAA17A9CB2300A4F0E6 /* DVLoggerConfiguration.h */,
@@ -258,6 +263,7 @@
 				2DD8D8FD1799D9DF00538E90 /* DVAppDelegate.m in Sources */,
 				2D28DF5917A1FE4500C0E49B /* DVFloatingWindow.m in Sources */,
 				2D889CA117A9BAA100A4F0E6 /* DVButtonObject.m in Sources */,
+				2D6F3D04181718FA0005831E /* DVEmailManager.m in Sources */,
 				2D889CA917A9CA4500A4F0E6 /* DVLogger.m in Sources */,
 				2D889CAC17A9CB2300A4F0E6 /* DVLoggerConfiguration.m in Sources */,
 				84B0773E17B1478F007E99FD /* DVStartViewController.m in Sources */,

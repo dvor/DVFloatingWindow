@@ -159,3 +159,89 @@
                    handler:(DVFloatingWindowButtonHandler)handler;
 
 @end
+
+
+@interface DVFloatingWindow(Config)
+
+/**
+ * This property is used to get or change window frame.
+ *
+ * !!! Please use this property instead of UIView `frame` property
+ *
+ * Corresponding macro - DVConfigFrameGet()
+ *                       DVConfigFrameSet(frame)
+ */
+@property (assign, nonatomic) CGRect configFrame;
+
+/**
+ * Properties below are used to get or change window colors
+ */
+
+/**
+ * Corresponding macro - DVConfigBackgroundColorGet()
+ *                       DVConfigBackgroundColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configBackroundColor;
+
+/**
+ * Corresponding macro - DVConfigTopBGColorGet()
+ *                       DVConfigTopBGColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopBGColor;
+
+/**
+ * Corresponding macro - DVConfigTopMenuBGColorGet()
+ *                       DVConfigTopMenuBGColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopMenuBGColor;
+
+/**
+ * Corresponding macro - DVConfigTopTextColorGet()
+ *                       DVConfigTopTextColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopTextColor;
+
+/**
+ * Corresponding macro - DVConfigRightCornerColorGet()
+ *                       DVConfigRightCornerColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configRightCornerColor;
+
+
+/**
+ * Corresponding macro - DVConfigEmailSubjectGet()
+ *                       DVConfigEmailSubjectSet(subject)
+ */
+@property (strong, nonatomic) NSString *configEmailSubject;
+
+/**
+ * Corresponding macro - DVConfigEmailToRecipientsGet()
+ *                       DVConfigEmailToRecipientsSet(subject)
+ */
+@property (strong, nonatomic) NSArray *configEmailToRecipients;
+
+/**
+ * Corresponding macro - DVConfigEmailCcRecipientsGet()
+ *                       DVConfigEmailCcRecipientsSet(subject)
+ */
+@property (strong, nonatomic) NSArray *configEmailCcRecipients;
+
+/**
+ * Corresponding macro - DVConfigEmailBccRecipientsGet()
+ *                       DVConfigEmailBccRecipientsSet(subject)
+ */
+@property (strong, nonatomic) NSArray *configEmailBccRecipients;
+
+/**
+ * Corresponding macro - DVConfigEmailMessageBodyGet()
+ *                       DVConfigEmailMessageBodySet(subject)
+ */
+@property (strong, nonatomic) NSString *configEmailMessageBody;
+
+/**
+ * Corresponding macro - DVConfigEmailIsMessageBodyHTMLGet()
+ *                       DVConfigEmailIsMessageBodyHTMLSet(subject)
+ */
+@property (assign, nonatomic) BOOL configEmailIsMessageBodyHTML;
+
+@end
