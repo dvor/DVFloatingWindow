@@ -17,14 +17,26 @@
 
 @implementation DVEmailManager
 
+
 #pragma mark -  Methods
 
 - (BOOL)sendLogsToEmailFromLoggers:(NSDictionary *)dictWithLoggers
+                           subject:(NSString *)subject
+                      toRecipients:(NSArray *)toRecipients
+                      ccRecipients:(NSArray *)ccRecipients
+                     bccRecipients:(NSArray *)bccRecipients
+                       messageBody:(NSString *)messageBody
+                 isMessageBodyHTML:(BOOL)isMessageBodyHTML;
 {
     if ([MFMailComposeViewController canSendMail]) {
         MFMailComposeViewController *mailVC = [MFMailComposeViewController new];
         mailVC.mailComposeDelegate = self;
-        [mailVC setSubject:@"Logs"];
+
+        [mailVC setSubject:subject];
+        [mailVC setToRecipients:toRecipients];
+        [mailVC setCcRecipients:ccRecipients];
+        [mailVC setBccRecipients:bccRecipients];
+        [mailVC setMessageBody:messageBody isHTML:isMessageBodyHTML];
 
         for (NSString *loggerKey in dictWithLoggers) {
             DVLogger *logger = dictWithLoggers[loggerKey];
@@ -36,7 +48,6 @@
                                  fileName:[self logFilenameFromString:loggerKey]];
             }
         }
-
 
         [[self rootViewController] presentViewController:mailVC
                                                 animated:YES

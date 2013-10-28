@@ -61,6 +61,20 @@
     #define DVConfigTopTextColorSet(color)     [[DVFloatingWindow sharedInstance] setConfigTopTextColor:color]
     #define DVConfigRightCornerColorSet(color) [[DVFloatingWindow sharedInstance] setConfigRightCornerColor:color]
 
+    #define DVConfigEmailSubjectGet()           [DVFloatingWindow sharedInstance].configEmailSubject
+    #define DVConfigEmailToRecipientsGet()      [DVFloatingWindow sharedInstance].configEmailToRecipients
+    #define DVConfigEmailCcRecipientsGet()      [DVFloatingWindow sharedInstance].configEmailCcRecipients
+    #define DVConfigEmailBccRecipientsGet()     [DVFloatingWindow sharedInstance].configEmailBccRecipients
+    #define DVConfigEmailMessageBodyGet()       [DVFloatingWindow sharedInstance].configEmailMessageBody
+    #define DVConfigEmailIsMessageBodyHTMLGet() [DVFloatingWindow sharedInstance].configEmailIsMessageBodyHTML
+
+    #define DVConfigEmailSubjectSet(subject)                     [[DVFloatingWindow sharedInstance] setConfigEmailSubject:subject]
+    #define DVConfigEmailToRecipientsSet(toRecipients)           [[DVFloatingWindow sharedInstance] setConfigEmailToRecipients:toRecipients]
+    #define DVConfigEmailCcRecipientsSet(ccRecipients)           [[DVFloatingWindow sharedInstance] setConfigEmailCcRecipients:ccRecipients]
+    #define DVConfigEmailBccRecipientsSet(bccRecipients)         [[DVFloatingWindow sharedInstance] setConfigEmailBccRecipients:bccRecipients]
+    #define DVConfigEmailMessageBodySet(messageBody)             [[DVFloatingWindow sharedInstance] setConfigEmailMessageBody:messageBody]
+    #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML) [[DVFloatingWindow sharedInstance] setConfigEmailIsMessageBodyHTML:isMessageBodyHTML]
+
 #else
 
      #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 
@@ -100,6 +114,20 @@
     #define DVConfigTopMenuBGColorSet(color) 
     #define DVConfigTopTextColorSet(color) 
     #define DVConfigRightCornerColorSet(color) 
+
+    #define DVConfigEmailSubjectGet()
+    #define DVConfigEmailToRecipientsGet()
+    #define DVConfigEmailCcRecipientsGet()
+    #define DVConfigEmailBccRecipientsGet()
+    #define DVConfigEmailMessageBodyGet()
+    #define DVConfigEmailIsMessageBodyHTMLGet()
+
+    #define DVConfigEmailSubjectSet(subject)
+    #define DVConfigEmailToRecipientsSet(toRecipients)
+    #define DVConfigEmailCcRecipientsSet(ccRecipients)
+    #define DVConfigEmailBccRecipientsSet(bccRecipients)
+    #define DVConfigEmailMessageBodySet(messageBody)
+    #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML)
      
 #endif
 

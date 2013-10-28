@@ -58,6 +58,12 @@ typedef enum
 @property (strong, nonatomic) UIColor *configTopMenuBGColor;
 @property (strong, nonatomic) UIColor *configTopFontColor;
 @property (strong, nonatomic) UIColor *configRightCornerColor;
+@property (strong, nonatomic) NSString *configEmailSubject;
+@property (strong, nonatomic) NSArray *configEmailToRecipients;
+@property (strong, nonatomic) NSArray *configEmailCcRecipients;
+@property (strong, nonatomic) NSArray *configEmailBccRecipients;
+@property (strong, nonatomic) NSString *configEmailMessageBody;
+@property (assign, nonatomic) BOOL configEmailIsMessageBodyHTML;
 
 @end
 
@@ -638,6 +644,15 @@ typedef enum
     return _emailManager;
 }
 
+- (NSString *)configEmailSubject
+{
+    if (! _configEmailSubject) {
+        _configEmailSubject = @"Logs";
+    }
+
+    return _configEmailSubject;
+}
+
 #pragma mark -  Supporting methods
 
 - (void)createSubviews
@@ -892,8 +907,18 @@ typedef enum
         }
     }
 
-    return loggers.count ? 
-        [self.emailManager sendLogsToEmailFromLoggers:loggers] : NO;
+    if (loggers.count) {
+        return [self.emailManager sendLogsToEmailFromLoggers:loggers
+                                                     subject:self.configEmailSubject
+                                                toRecipients:self.configEmailToRecipients
+                                                ccRecipients:self.configEmailCcRecipients
+                                               bccRecipients:self.configEmailBccRecipients
+                                                 messageBody:self.configEmailMessageBody
+                                           isMessageBodyHTML:self.configEmailIsMessageBodyHTML];
+    }
+    else {
+        return NO;
+    }
 }
 
 @end
