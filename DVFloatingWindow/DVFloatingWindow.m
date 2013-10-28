@@ -339,28 +339,6 @@ typedef enum
     }
 }
 
-- (void)loggerSetConfigurationForLogger:(NSString *)key
-                          configuration:(DVLoggerConfiguration *)configuration
-{
-    if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
-                  ! [key isKindOfClass:[NSString class]] || 
-                  ! self.dictWithLoggers[key]) 
-    {
-        return;
-    }
-
-    @synchronized(key) {
-        DVLogger *logger = self.dictWithLoggers[key];
-        logger.configuration = configuration;
-
-        if (self.tableViewState == TableViewStateLogs &&
-                [key isEqualToString:self.visibleLoggerKey]) 
-        {
-            [self.tableView reloadData];
-        }
-    }
-}
-
 - (void)loggerLogToLogger:(NSString *)key
                       log:(NSString *)format,...
 {
@@ -474,6 +452,28 @@ typedef enum
 - (UIColor *)configRightCornerColor
 {
     return self.bottomCorner.backgroundColor;
+}
+
+- (void)configLogger:(NSString *)key
+       configuration:(DVLoggerConfiguration *)configuration
+{
+    if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
+                  ! [key isKindOfClass:[NSString class]] || 
+                  ! self.dictWithLoggers[key]) 
+    {
+        return;
+    }
+
+    @synchronized(key) {
+        DVLogger *logger = self.dictWithLoggers[key];
+        logger.configuration = configuration;
+
+        if (self.tableViewState == TableViewStateLogs &&
+                [key isEqualToString:self.visibleLoggerKey]) 
+        {
+            [self.tableView reloadData];
+        }
+    }
 }
 
 #pragma mark -  Gestures
@@ -919,6 +919,14 @@ typedef enum
     else {
         return NO;
     }
+}
+
+#pragma mark -  Deprecated
+
+- (void)loggerSetConfigurationForLogger:(NSString *)key
+                          configuration:(DVLoggerConfiguration *)configuration
+{
+    [self configLogger:key configuration:configuration];
 }
 
 @end

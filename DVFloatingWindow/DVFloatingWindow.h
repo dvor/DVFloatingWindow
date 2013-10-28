@@ -116,21 +116,6 @@
 - (void)loggerRemove:(NSString *)loggerKey;
 
 /**
- * Set configuration for logger.
- *
- * If logger doesn't exist nothing happens.
- *
- * Corresponding macro - DVLoggerSetConfiguration(
- *                                                   NSString *loggerKey,
- *                                                   BOOL latestMessageOnTop,
- *                                                   BOOL scrollToNewMessage,
- *                                                   UIFont *font
- *                                               )
- */
-- (void)loggerSetConfigurationForLogger:(NSString *)loggerKey
-                          configuration:(DVLoggerConfiguration *)configuration;
-
-/**
  * Add string with format to logger. The appearance depends on a logger configuration.
  *
  * If logger doesn't exist nothing happens.
@@ -243,5 +228,38 @@
  *                       DVConfigEmailIsMessageBodyHTMLSet(subject)
  */
 @property (assign, nonatomic) BOOL configEmailIsMessageBodyHTML;
+
+
+/**
+ * Set configuration for logger.
+ *
+ * If logger doesn't exist nothing happens.
+ *
+ * Corresponding macro - DVConfigLogger(
+ *                                         NSString *loggerKey,
+ *                                         BOOL latestMessageOnTop,
+ *                                         UIFont *font
+ *                                     )
+ */
+- (void)configLogger:(NSString *)loggerKey
+       configuration:(DVLoggerConfiguration *)configuration;
+
+
+#pragma mark -  Deprecated
+
+/**
+ * Set configuration for logger.
+ *
+ * If logger doesn't exist nothing happens.
+ *
+ * Corresponding macro - DVLoggerSetConfiguration(
+ *                                                   NSString *loggerKey,
+ *                                                   BOOL latestMessageOnTop,
+ *                                                   BOOL scrollToNewMessage,
+ *                                                   UIFont *font
+ *                                               )
+ */
+- (void)loggerSetConfigurationForLogger:(NSString *)loggerKey
+                          configuration:(DVLoggerConfiguration *)configuration __attribute__((deprecated));
 
 @end

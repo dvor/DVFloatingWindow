@@ -9,39 +9,55 @@
 #ifndef DVFloatingWindow_DVMacros_h
 #define DVFloatingWindow_DVMacros_h
 
+#ifndef DV_NO_DEPRECATED_MACROS
+    #warning using depreated macros. To disable define DV_NO_DEPRECATED_MACROS before importing DVFloatingWindow.h
+#endif
+
 #if DV_FLOATING_WINDOW_ENABLE == 1
 
-     #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) \
-         [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
-                                                 scrollToNewMessage:scrollToNew \
-                                                               font:theFont]
+    #ifdef DV_NO_DEPRECATED_MACROS
+
+        #define __DVLoggerConfiguration(latestMessageOnTop, theFont) \
+            [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
+                                                                  font:theFont]
+    #else
+
+        #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) \
+            [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
+                                                    scrollToNewMessage:scrollToNew \
+                                                                  font:theFont]
+    #endif
+
      
-     #define DVWindowShow() [[DVFloatingWindow sharedInstance] windowShow]
-     #define DVWindowHide() [[DVFloatingWindow sharedInstance] windowHide]
-     #define DVWindowActivationTap(touchesNumber) \
-          [[DVFloatingWindow sharedInstance] windowActivationTapWithTouchesNumber:touchesNumber]
-     
-     #define DVWindowActivationLongPress(touchesNumber, minPressDuration) \
-         [[DVFloatingWindow sharedInstance] windowActivationLongPressWithTouchesNumber:touchesNumber \
-                                                                  minimumPressDuration:minPressDuration]
-     
-     #define DVTapPrevious() [[DVFloatingWindow sharedInstance] tabShowPrevious]
-     #define DVTabNext() [[DVFloatingWindow sharedInstance] tabShowNext]
-     #define DVTabSwitchToLogger(loggerKey) \
-         [[DVFloatingWindow sharedInstance] tabSwitchToLogger:loggerKey]
-     #define DVTabSwitchToButtonsTab() \
-         [[DVFloatingWindow sharedInstance] tabSwitchToButtonsTab]
-     
-     #define DVLoggerCreate(key) [[DVFloatingWindow sharedInstance] loggerCreate:key]
-     #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
-     #define DVLoggerRemove(key) [[DVFloatingWindow sharedInstance] loggerRemove:key]
-     
-     #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) \
-         [[DVFloatingWindow sharedInstance] loggerSetConfigurationForLogger:loggerKey \
-                                                              configuration:__DVLoggerConfiguration(latestMessageOnTop, scrollToNewMessage, font)]
-     
-     #define DVLoggerLog(loggerKey, format, ...) \
-          [[DVFloatingWindow sharedInstance] loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
+    #define DVWindowShow() [[DVFloatingWindow sharedInstance] windowShow]
+    #define DVWindowHide() [[DVFloatingWindow sharedInstance] windowHide]
+    #define DVWindowActivationTap(touchesNumber) \
+         [[DVFloatingWindow sharedInstance] windowActivationTapWithTouchesNumber:touchesNumber]
+    
+    #define DVWindowActivationLongPress(touchesNumber, minPressDuration) \
+        [[DVFloatingWindow sharedInstance] windowActivationLongPressWithTouchesNumber:touchesNumber \
+                                                                 minimumPressDuration:minPressDuration]
+    
+    #define DVTapPrevious() [[DVFloatingWindow sharedInstance] tabShowPrevious]
+    #define DVTabNext() [[DVFloatingWindow sharedInstance] tabShowNext]
+    #define DVTabSwitchToLogger(loggerKey) \
+        [[DVFloatingWindow sharedInstance] tabSwitchToLogger:loggerKey]
+    #define DVTabSwitchToButtonsTab() \
+        [[DVFloatingWindow sharedInstance] tabSwitchToButtonsTab]
+    
+    #define DVLoggerCreate(key) [[DVFloatingWindow sharedInstance] loggerCreate:key]
+    #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
+    #define DVLoggerRemove(key) [[DVFloatingWindow sharedInstance] loggerRemove:key]
+
+    #ifndef DV_NO_DEPRECATED_MACROS
+
+        #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) \
+            [[DVFloatingWindow sharedInstance] loggerSetConfigurationForLogger:loggerKey \
+                                                                 configuration:__DVLoggerConfiguration(latestMessageOnTop, scrollToNewMessage, font)]
+    #endif
+    
+    #define DVLoggerLog(loggerKey, format, ...) \
+         [[DVFloatingWindow sharedInstance] loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
 
     #define DVButtonAdd(title, theHandler) \
           [[DVFloatingWindow sharedInstance] buttonAddWithTitle:title handler:theHandler]
@@ -75,30 +91,42 @@
     #define DVConfigEmailMessageBodySet(messageBody)             [[DVFloatingWindow sharedInstance] setConfigEmailMessageBody:messageBody]
     #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML) [[DVFloatingWindow sharedInstance] setConfigEmailIsMessageBodyHTML:isMessageBodyHTML]
 
+    #ifdef DV_NO_DEPRECATED_MACROS
+        #define DVConfigLogger(loggerKey, latestMessageOnTop, font) \
+            [[DVFloatingWindow sharedInstance] configLogger:loggerKey \
+                                              configuration:__DVLoggerConfiguration(latestMessageOnTop, font)]
+    #endif
+
 #else
 
-     #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 
-     
-     #define DVWindowShow() 
-     #define DVWindowHide() 
-     #define DVWindowActivationTap(touchesNumber) 
-     
-     #define DVWindowActivationLongPress(touchesNumber, minPressDuration) 
-     
-     #define DVTapNext 
-     #define DVTabPrevious 
-     #define DVTabSwitchToLogger(loggerKey) 
-     #define DVTabSwitchToButtonsTab() 
-     
-     #define DVLoggerCreate(key) 
-     #define DVLoggerClear(key) 
-     #define DVLoggerRemove(key) 
-     
-     #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) 
-     
-     #define DVLoggerLog(loggerKey, format, ...) 
+    #ifdef DV_NO_DEPRECATED_MACROS
+        #define __DVLoggerConfiguration(latestMessageOnTop, theFont) 
+    #else
+        #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 
+    #endif
+    
+    #define DVWindowShow() 
+    #define DVWindowHide() 
+    #define DVWindowActivationTap(touchesNumber) 
+    
+    #define DVWindowActivationLongPress(touchesNumber, minPressDuration) 
+    
+    #define DVTapNext 
+    #define DVTabPrevious 
+    #define DVTabSwitchToLogger(loggerKey) 
+    #define DVTabSwitchToButtonsTab() 
+    
+    #define DVLoggerCreate(key) 
+    #define DVLoggerClear(key) 
+    #define DVLoggerRemove(key) 
+    
+    #ifndef DV_NO_DEPRECATED_MACROS
+        #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) 
+    #endif
+    
+    #define DVLoggerLog(loggerKey, format, ...) 
 
-     #define DVButtonAdd(title, theHandler) 
+    #define DVButtonAdd(title, theHandler) 
 
     #define DVConfigFrameGet() 
     #define DVConfigFrameSet(frame) 
@@ -128,7 +156,11 @@
     #define DVConfigEmailBccRecipientsSet(bccRecipients)
     #define DVConfigEmailMessageBodySet(messageBody)
     #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML)
-     
+
+    #ifdef DV_NO_DEPRECATED_MACROS
+        #define DVConfigLogger(loggerKey, latestMessageOnTop, font)
+    #endif
+
 #endif
 
 #define DVLLog(loggerKey, format, ...) DVLoggerLog(loggerKey, format, ##__VA_ARGS__)

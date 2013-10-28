@@ -25,7 +25,6 @@
     logger.logsArray = [NSMutableArray new];
     logger.configuration = [DVLoggerConfiguration
         configurationWithLatestMessageOnTop:NO
-                         scrollToNewMessage:YES
                                        font:[UIFont systemFontOfSize:10.0]];
 
     return logger;
