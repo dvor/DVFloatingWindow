@@ -231,18 +231,19 @@
 
 
 /**
- * Set configuration for logger.
- *
  * If logger doesn't exist nothing happens.
  *
- * Corresponding macro - DVConfigLogger(
- *                                         NSString *loggerKey,
- *                                         BOOL latestMessageOnTop,
- *                                         UIFont *font
- *                                     )
+ * Corresponding macro -
+ * DVConfigLoggerLatestMessageOnTop(NSString *loggerKey, BOOL latestMessageOnTop)
  */
-- (void)configLogger:(NSString *)loggerKey
-       configuration:(DVLoggerConfiguration *)configuration;
+- (void)configLogger:(NSString *)loggerKey latestMessageOnTop:(BOOL)latestMessageOnTop;
+
+/**
+ * If logger doesn't exist nothing happens.
+ *
+ * Corresponding macro - DVConfigLoggerFont(NSString *loggerKey, UIFont *font)
+ */
+- (void)configLogger:(NSString *)loggerKey font:(UIFont *)font;
 
 
 #pragma mark -  Deprecated

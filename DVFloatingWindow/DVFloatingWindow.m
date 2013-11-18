@@ -468,22 +468,41 @@ typedef enum
     return self.bottomCorner.backgroundColor;
 }
 
-- (void)configLogger:(NSString *)key
-       configuration:(DVLoggerConfiguration *)configuration
+- (void)configLogger:(NSString *)loggerKey latestMessageOnTop:(BOOL)latestMessageOnTop
 {
-    if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
-                  ! [key isKindOfClass:[NSString class]] || 
-                  ! self.dictWithLoggers[key]) 
+    if (! [loggerKey isKindOfClass:[NSString class]] ||
+        ! self.dictWithLoggers[loggerKey])
     {
         return;
     }
 
-    @synchronized(key) {
-        DVLogger *logger = self.dictWithLoggers[key];
-        logger.configuration = configuration;
+    @synchronized(loggerKey) {
+        DVLogger *logger = self.dictWithLoggers[loggerKey];
+        logger.configuration.latestMessageOnTop = latestMessageOnTop;
 
         if (self.tableViewState == TableViewStateLogs &&
-                [key isEqualToString:self.visibleLoggerKey]) 
+                [loggerKey isEqualToString:self.visibleLoggerKey])
+        {
+            [self.tableView reloadData];
+        }
+    }
+}
+
+- (void)configLogger:(NSString *)loggerKey font:(UIFont *)font
+{
+    if (! font ||
+        ! [loggerKey isKindOfClass:[NSString class]] ||
+        ! self.dictWithLoggers[loggerKey])
+    {
+        return;
+    }
+
+    @synchronized(loggerKey) {
+        DVLogger *logger = self.dictWithLoggers[loggerKey];
+        logger.configuration.font = font;
+
+        if (self.tableViewState == TableViewStateLogs &&
+                [loggerKey isEqualToString:self.visibleLoggerKey]) 
         {
             [self.tableView reloadData];
         }
@@ -959,7 +978,8 @@ typedef enum
 - (void)loggerSetConfigurationForLogger:(NSString *)key
                           configuration:(DVLoggerConfiguration *)configuration
 {
-    [self configLogger:key configuration:configuration];
+    [self configLogger:key latestMessageOnTop:configuration.latestMessageOnTop];
+    [self configLogger:key font:configuration.font];
 }
 
 @end
