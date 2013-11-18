@@ -9,24 +9,12 @@
 #ifndef DVFloatingWindow_DVMacros_h
 #define DVFloatingWindow_DVMacros_h
 
-#ifndef DV_NO_DEPRECATED_MACROS
-    #warning using depreated macros. To disable define DV_NO_DEPRECATED_MACROS before importing DVFloatingWindow.h
-#endif
-
 #if DV_FLOATING_WINDOW_ENABLE == 1
 
-    #ifdef DV_NO_DEPRECATED_MACROS
-
-        #define __DVLoggerConfiguration(latestMessageOnTop, theFont) \
-            [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
-                                                                  font:theFont]
-    #else
-
-        #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) \
-            [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
-                                                    scrollToNewMessage:scrollToNew \
-                                                                  font:theFont]
-    #endif
+    #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) \
+        [DVLoggerConfiguration configurationWithLatestMessageOnTop:latestMessageOnTop \
+                                                scrollToNewMessage:scrollToNew \
+                                                              font:theFont]
 
      
     #define DVWindowShow() [[DVFloatingWindow sharedInstance] windowShow]
@@ -49,12 +37,10 @@
     #define DVLoggerClear(key) [[DVFloatingWindow sharedInstance] loggerClear:key]
     #define DVLoggerRemove(key) [[DVFloatingWindow sharedInstance] loggerRemove:key]
 
-    #ifndef DV_NO_DEPRECATED_MACROS
 
-        #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) \
-            [[DVFloatingWindow sharedInstance] loggerSetConfigurationForLogger:loggerKey \
-                                                                 configuration:__DVLoggerConfiguration(latestMessageOnTop, scrollToNewMessage, font)]
-    #endif
+    #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) \
+        [[DVFloatingWindow sharedInstance] loggerSetConfigurationForLogger:loggerKey \
+                                                             configuration:__DVLoggerConfiguration(latestMessageOnTop, scrollToNewMessage, font)]
     
     #define DVLoggerLog(loggerKey, format, ...) \
          [[DVFloatingWindow sharedInstance] loggerLogToLogger:loggerKey log:format, ##__VA_ARGS__]
@@ -91,19 +77,15 @@
     #define DVConfigEmailMessageBodySet(messageBody)             [[DVFloatingWindow sharedInstance] setConfigEmailMessageBody:messageBody]
     #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML) [[DVFloatingWindow sharedInstance] setConfigEmailIsMessageBodyHTML:isMessageBodyHTML]
 
-    #ifdef DV_NO_DEPRECATED_MACROS
-        #define DVConfigLogger(loggerKey, latestMessageOnTop, font) \
-            [[DVFloatingWindow sharedInstance] configLogger:loggerKey \
-                                              configuration:__DVLoggerConfiguration(latestMessageOnTop, font)]
-    #endif
+    #define DVConfigLoggerLatestMessageOnTop(loggerKey, theLatestMessageOnTop) \
+        [[DVFloatingWindow sharedInstance] configLogger:loggerKey latestMessageOnTop:theLatestMessageOnTop]
+
+    #define DVConfigLoggerFont(loggerKey, theFont) \
+        [[DVFloatingWindow sharedInstance] configLogger:loggerKey font:theFont]
 
 #else
 
-    #ifdef DV_NO_DEPRECATED_MACROS
-        #define __DVLoggerConfiguration(latestMessageOnTop, theFont) 
-    #else
-        #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 
-    #endif
+    #define __DVLoggerConfiguration(latestMessageOnTop, scrollToNew, theFont) 
     
     #define DVWindowShow() 
     #define DVWindowHide() 
@@ -120,9 +102,7 @@
     #define DVLoggerClear(key) 
     #define DVLoggerRemove(key) 
     
-    #ifndef DV_NO_DEPRECATED_MACROS
-        #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) 
-    #endif
+    #define DVLoggerSetConfiguration(loggerKey, latestMessageOnTop, scrollToNewMessage, font) 
     
     #define DVLoggerLog(loggerKey, format, ...) 
 
@@ -157,9 +137,8 @@
     #define DVConfigEmailMessageBodySet(messageBody)
     #define DVConfigEmailIsMessageBodyHTMLSet(isMessageBodyHTML)
 
-    #ifdef DV_NO_DEPRECATED_MACROS
-        #define DVConfigLogger(loggerKey, latestMessageOnTop, font)
-    #endif
+    #define DVConfigLoggerLatestMessageOnTop(loggerKey, theLatestMessageOnTop)
+    #define DVConfigLoggerFont(loggerKey, theFont)
 
 #endif
 

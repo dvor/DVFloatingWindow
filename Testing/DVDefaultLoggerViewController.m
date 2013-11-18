@@ -75,7 +75,8 @@
     CGFloat fontSize = 10.0 + self.slider.value * 10;
     UIFont *font = [UIFont systemFontOfSize:fontSize];
 
-    DVConfigLogger(@"Default", NO, font);
+    DVConfigLoggerLatestMessageOnTop(@"Default", NO);
+    DVConfigLoggerFont(@"Default", font);
 
     self.sizeLabel.text = [NSString stringWithFormat:@"%d", (int)fontSize];
 }

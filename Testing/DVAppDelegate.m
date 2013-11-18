@@ -28,7 +28,8 @@
     DVWindowActivationTap(2);
     DVLoggerCreate(tab1);
     DVLoggerCreate(tab2);
-    DVConfigLogger(tab2, YES, [UIFont systemFontOfSize:15]);
+    DVConfigLoggerLatestMessageOnTop(@"Default", YES);
+    DVConfigLoggerFont(@"Default", [UIFont systemFontOfSize:15]);
 
     DVLog(@"This is tab with default logger");
     DVLLog(@"Tab 1", @"This is tab 1");
