@@ -249,6 +249,11 @@
 #pragma mark -  Deprecated
 
 /**
+ * Method is deprecated, please use these methods instead:
+ * configLogger:latestMessageOnTop:
+ * configLogger:font:
+ *
+ *
  * Set configuration for logger.
  *
  * If logger doesn't exist nothing happens.
