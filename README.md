@@ -4,7 +4,7 @@ DVFloatingWindow is a simple and effective tool for reviewing your application l
 
 You can manage them by creating a separate tab for each log, quickly switch between tabs and see all the details you need. Also there is an opportunity to add buttons with your custom handlers for helping you to debug your app (e.g. send a network request, reset settings, etc.).
 
-![DVFloatingWindow GIF demo](demo.gif)
+![DVFloatingWindow GIF demo](https://raw.github.com/wiki/dvor/DVFloatingWindow/demo-0.3.gif)
 
 # Installation
 
