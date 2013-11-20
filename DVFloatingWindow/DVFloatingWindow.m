@@ -6,17 +6,17 @@
 //  Copyright (c) 2013 Dmitry Vorobyov. All rights reserved.
 //
 
-#import <MessageUI/MessageUI.h>
-
 #import "DVFloatingWindow.h"
 #import "DVLogger.h"
 #import "DVButtonObject.h"
+#import "DVEmailManager.h"
 
 #define BORDER_SIZE 2
 #define TOP_BORDER_HEIGHT 30
 #define BOTTOM_CORNER_SIZE 30
 #define MOVEMENT_BUTTON_WIDTH 30
 #define MENU_BUTTON_WIDTH 60
+#define AUTOSCROLL_BUTTON_WIDTH 60
 
 #define MIN_ORIGIN_Y 20
 #define MIN_VISIBLE_SIZE 30
@@ -31,8 +31,7 @@ typedef enum
     TableViewStateLogs
 } TableViewState;
 
-@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate,
-    MFMailComposeViewControllerDelegate>
+@interface DVFloatingWindow() <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UILabel *topTitleLabel;
@@ -40,6 +39,7 @@ typedef enum
 @property (strong, nonatomic) UIButton *previousButton;
 @property (strong, nonatomic) UIButton *nextButton;
 @property (strong, nonatomic) UIButton *menuButton;
+@property (strong, nonatomic) UIButton *autoscrollButton;
 
 @property (strong, nonatomic) NSMutableArray *menuArray;
 @property (strong, nonatomic) NSMutableArray *arrayWithButtons;
@@ -49,6 +49,23 @@ typedef enum
 @property (strong, nonatomic) NSString *visibleLoggerKey;
 
 @property (strong, nonatomic) UIGestureRecognizer *activateRecognizer;
+
+@property (strong, nonatomic) DVEmailManager *emailManager;
+
+
+// properties from h file
+@property (assign, nonatomic) CGRect configFrame;
+@property (strong, nonatomic) UIColor *configBackroundColor;
+@property (strong, nonatomic) UIColor *configTopBGColor;
+@property (strong, nonatomic) UIColor *configTopMenuBGColor;
+@property (strong, nonatomic) UIColor *configTopFontColor;
+@property (strong, nonatomic) UIColor *configRightCornerColor;
+@property (strong, nonatomic) NSString *configEmailSubject;
+@property (strong, nonatomic) NSArray *configEmailToRecipients;
+@property (strong, nonatomic) NSArray *configEmailCcRecipients;
+@property (strong, nonatomic) NSArray *configEmailBccRecipients;
+@property (strong, nonatomic) NSString *configEmailMessageBody;
+@property (assign, nonatomic) BOOL configEmailIsMessageBodyHTML;
 
 @end
 
@@ -67,11 +84,14 @@ typedef enum
     if (self = [super initWithFrame:CGRectZero]) {
         [self createSubviews];
 
-        self.frame = CGRectMake(0, 100, 100, 100);
-        self.backgroundColor = [UIColor lightGrayColor];
-        self.clipsToBounds = YES;
+        self.configFrame = CGRectMake(0, 100, 100, 100);
+        self.configBackroundColor = [UIColor lightGrayColor];
+        self.configTopBGColor = [UIColor greenColor];
+        self.configTopMenuBGColor = [UIColor lightGrayColor];
+        self.configTopTextColor = [UIColor blackColor];
+        self.configRightCornerColor = [UIColor yellowColor];
 
-        [self updateTableViewFrame];
+        self.clipsToBounds = YES;
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
@@ -134,6 +154,10 @@ typedef enum
     frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
     self.menuButton.frame = frame;
 
+    frame = self.autoscrollButton.frame;
+    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
+    self.autoscrollButton.frame = frame;
+
     frame = self.topTitleLabel.frame;
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     self.topTitleLabel.frame = frame;
@@ -183,6 +207,11 @@ typedef enum
 
     [self updateTopTitleLabelText];
     [self.tableView reloadData];
+}
+
+- (void)autoscrollButtonPressed
+{
+    self.autoscrollButton.selected = ! self.autoscrollButton.selected;
 }
 
 #pragma mark -  Methods window
@@ -321,28 +350,6 @@ typedef enum
     }
 }
 
-- (void)loggerSetConfigurationForLogger:(NSString *)key
-                          configuration:(DVLoggerConfiguration *)configuration
-{
-    if (! [configuration isKindOfClass:[DVLoggerConfiguration class]] ||
-                  ! [key isKindOfClass:[NSString class]] || 
-                  ! self.dictWithLoggers[key]) 
-    {
-        return;
-    }
-
-    @synchronized(key) {
-        DVLogger *logger = self.dictWithLoggers[key];
-        logger.configuration = configuration;
-
-        if (self.tableViewState == TableViewStateLogs &&
-                [key isEqualToString:self.visibleLoggerKey]) 
-        {
-            [self.tableView reloadData];
-        }
-    }
-}
-
 - (void)loggerLogToLogger:(NSString *)key
                       log:(NSString *)format,...
 {
@@ -370,13 +377,16 @@ typedef enum
             [self.tableView insertRowsAtIndexPaths:@[path]
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
 
-            if (logger.configuration.scrollToNewMessage) {
+            if (self.autoscrollButton.selected) {
                 UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
                     UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
 
                 [self.tableView scrollToRowAtIndexPath:path
                                       atScrollPosition:scrollPosition
                                               animated:YES];
+            }
+            else {
+                [self.tableView flashScrollIndicators];
             }
         }
     }
@@ -392,6 +402,110 @@ typedef enum
 
         [self.arrayWithButtons addObject:object];
         [self.tableView reloadData];
+    }
+}
+
+#pragma mark -  Methods configuration
+
+- (void)setConfigFrame:(CGRect)configFrame
+{
+    self.frame = configFrame;
+    [self updateTableViewFrame];
+}
+
+- (CGRect)configFrame
+{
+    return self.frame;
+}
+
+- (void)setConfigBackroundColor:(UIColor *)color
+{
+    self.backgroundColor = color;
+}
+
+- (UIColor *)configBackroundColor
+{
+    return self.backgroundColor;
+}
+
+- (void)setConfigTopBGColor:(UIColor *)color
+{
+    _configTopBGColor = color;
+
+    if (! [self isStateMenu])
+    {
+        self.topTitleLabel.backgroundColor = color;
+    }
+}
+
+- (void)setConfigTopMenuBGColor:(UIColor *)color;
+{
+    _configTopMenuBGColor = color;
+
+    if ([self isStateMenu])
+    {
+        self.topTitleLabel.backgroundColor = color;
+    }
+}
+
+- (void)setConfigTopTextColor:(UIColor *)color
+{
+    self.topTitleLabel.textColor = color;
+}
+
+- (UIColor *)configTopTextColor
+{
+    return self.topTitleLabel.textColor;
+}
+
+- (void)setConfigRightCornerColor:(UIColor *)color
+{
+    self.bottomCorner.backgroundColor = color;
+}
+
+- (UIColor *)configRightCornerColor
+{
+    return self.bottomCorner.backgroundColor;
+}
+
+- (void)configLogger:(NSString *)loggerKey latestMessageOnTop:(BOOL)latestMessageOnTop
+{
+    if (! [loggerKey isKindOfClass:[NSString class]] ||
+        ! self.dictWithLoggers[loggerKey])
+    {
+        return;
+    }
+
+    @synchronized(loggerKey) {
+        DVLogger *logger = self.dictWithLoggers[loggerKey];
+        logger.configuration.latestMessageOnTop = latestMessageOnTop;
+
+        if (self.tableViewState == TableViewStateLogs &&
+                [loggerKey isEqualToString:self.visibleLoggerKey])
+        {
+            [self.tableView reloadData];
+        }
+    }
+}
+
+- (void)configLogger:(NSString *)loggerKey font:(UIFont *)font
+{
+    if (! font ||
+        ! [loggerKey isKindOfClass:[NSString class]] ||
+        ! self.dictWithLoggers[loggerKey])
+    {
+        return;
+    }
+
+    @synchronized(loggerKey) {
+        DVLogger *logger = self.dictWithLoggers[loggerKey];
+        logger.configuration.font = font;
+
+        if (self.tableViewState == TableViewStateLogs &&
+                [loggerKey isEqualToString:self.visibleLoggerKey]) 
+        {
+            [self.tableView reloadData];
+        }
     }
 }
 
@@ -466,6 +580,7 @@ typedef enum
     else if (self.tableViewState == TableViewStateButtons) {
         DVButtonObject *object = self.arrayWithButtons[indexPath.row];
         cell.textLabel.text = object.name;
+        cell.textLabel.font = [UIFont systemFontOfSize:13.0];
     }
     else if (self.tableViewState == TableViewStateLogs) {
         DVLogger *logger = self.dictWithLoggers[self.visibleLoggerKey];
@@ -551,13 +666,24 @@ typedef enum
     return height;
 }
 
-#pragma mark -  MFMailComposeViewController delegate
+#pragma mark -  Properties
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result
-                        error:(NSError*)error
+- (DVEmailManager *)emailManager
 {
-    [[self rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    if (! _emailManager) {
+        _emailManager = [DVEmailManager new];
+    }
+
+    return _emailManager;
+}
+
+- (NSString *)configEmailSubject
+{
+    if (! _configEmailSubject) {
+        _configEmailSubject = @"Logs";
+    }
+
+    return _configEmailSubject;
 }
 
 #pragma mark -  Supporting methods
@@ -623,14 +749,31 @@ typedef enum
 
     {
         CGRect frame = CGRectZero;
+        frame.origin.x = 2 * (BORDER_SIZE + MOVEMENT_BUTTON_WIDTH) + MENU_BUTTON_WIDTH;
+        frame.size.width = AUTOSCROLL_BUTTON_WIDTH;
+        frame.size.height = BOTTOM_CORNER_SIZE;
+
+
+        self.autoscrollButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        self.autoscrollButton.selected = YES;
+        self.autoscrollButton.frame = frame;
+        self.autoscrollButton.titleLabel.font = [UIFont systemFontOfSize:9.0];
+        [self.autoscrollButton setTitle:@"✗ autoscroll" forState:UIControlStateNormal];
+        [self.autoscrollButton setTitle:@"✓ autoscroll" forState:UIControlStateSelected];
+        [self.autoscrollButton addTarget:self
+                            action:@selector(autoscrollButtonPressed)
+                  forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.autoscrollButton];
+    }
+
+    {
+        CGRect frame = CGRectZero;
         frame.origin.x = frame.origin.y = BORDER_SIZE;
         frame.size.height = TOP_BORDER_HEIGHT;
 
         self.topTitleLabel = [[UILabel alloc] initWithFrame:frame];
         self.topTitleLabel.userInteractionEnabled = YES;
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
         self.topTitleLabel.font = [UIFont systemFontOfSize:13.0];
-        self.topTitleLabel.textColor = [UIColor blackColor];
         self.topTitleLabel.textAlignment = NSTextAlignmentCenter;
         self.topTitleLabel.text = @"<<Buttons>>";
         [self addSubview:self.topTitleLabel];
@@ -645,7 +788,6 @@ typedef enum
         frame.size.width = frame.size.height = BOTTOM_CORNER_SIZE;
 
         self.bottomCorner = [[UIView alloc] initWithFrame:frame];
-        self.bottomCorner.backgroundColor = [UIColor yellowColor];
         [self addSubview:self.bottomCorner];
 
         UIPanGestureRecognizer *bottomPanGR = [[UIPanGestureRecognizer alloc]
@@ -733,15 +875,15 @@ typedef enum
 {
     if ([self isStateMenu]) {
         self.topTitleLabel.text = @"<<Menu>>";
-        self.topTitleLabel.backgroundColor = [UIColor lightGrayColor];
+        self.topTitleLabel.backgroundColor = self.configTopMenuBGColor;
     }
     else if (self.tableViewState == TableViewStateButtons) {
         self.topTitleLabel.text = @"<<Buttons>>";
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.backgroundColor = self.configTopBGColor;
     }
     else if (self.tableViewState == TableViewStateLogs) {
         self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
-        self.topTitleLabel.backgroundColor = [UIColor greenColor];
+        self.topTitleLabel.backgroundColor = self.configTopBGColor;
     }
 }
 
@@ -807,55 +949,37 @@ typedef enum
 
 - (BOOL)sendLogsToEmailFromLoggersWithNames:(NSArray *)arrayWithLoggersNames
 {
-    if ([MFMailComposeViewController canSendMail]) {
-        MFMailComposeViewController *mailVC = [MFMailComposeViewController new];
-        mailVC.mailComposeDelegate = self;
-        [mailVC setSubject:@"Logs"];
+    NSMutableDictionary *loggers = [NSMutableDictionary new];
 
-        for (NSString *loggerKey in arrayWithLoggersNames) {
-            DVLogger *logger = self.dictWithLoggers[loggerKey];
-            NSData *data = [logger logsToData];
+    for (NSString *loggerKey in arrayWithLoggersNames) {
+        DVLogger *l = self.dictWithLoggers[loggerKey];
 
-            if (data) {
-                [mailVC addAttachmentData:data
-                                 mimeType:@"text/plain"
-                                 fileName:[self logFilenameFromString:loggerKey]];
-            }
+        if (l) {
+            loggers[loggerKey] = l;
         }
+    }
 
-
-        [[self rootViewController] presentViewController:mailVC
-                                                animated:YES
-                                              completion:nil];
-
-        return YES;
+    if (loggers.count) {
+        return [self.emailManager sendLogsToEmailFromLoggers:loggers
+                                                     subject:self.configEmailSubject
+                                                toRecipients:self.configEmailToRecipients
+                                                ccRecipients:self.configEmailCcRecipients
+                                               bccRecipients:self.configEmailBccRecipients
+                                                 messageBody:self.configEmailMessageBody
+                                           isMessageBodyHTML:self.configEmailIsMessageBodyHTML];
     }
     else {
-        UIAlertView *alertView = [[UIAlertView alloc] 
-            initWithTitle:@"Error"
-                  message:@"Please configure your mail settings"
-                 delegate:nil
-        cancelButtonTitle:@"OK"
-        otherButtonTitles:nil];
-
-        [alertView show];
-
         return NO;
     }
 }
 
-- (NSString *)logFilenameFromString:(NSString *)string
-{
-    NSCharacterSet *illegalFileNameCharacters = [NSCharacterSet characterSetWithCharactersInString:@"/\\?%*|\"<>"];
-    string = [[string componentsSeparatedByCharactersInSet:illegalFileNameCharacters] componentsJoinedByString:@""];
+#pragma mark -  Deprecated
 
-    return [NSString stringWithFormat:@"%@.txt", string];
-}
-
-- (UIViewController *)rootViewController
+- (void)loggerSetConfigurationForLogger:(NSString *)key
+                          configuration:(DVLoggerConfiguration *)configuration
 {
-    id delegate = [UIApplication sharedApplication].delegate;
-    return [[delegate window] rootViewController];
+    [self configLogger:key latestMessageOnTop:configuration.latestMessageOnTop];
+    [self configLogger:key font:configuration.font];
 }
 
 @end

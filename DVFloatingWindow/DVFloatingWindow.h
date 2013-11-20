@@ -15,6 +15,10 @@
 
 + (DVFloatingWindow *)sharedInstance;
 
+@end
+
+
+@interface DVFloatingWindow(Window)
 
 /**
  * Show the window if it's hidden.
@@ -52,6 +56,10 @@
 - (void)windowActivationLongPressWithTouchesNumber:(NSUInteger)touchesNumber
                               minimumPressDuration:(CFTimeInterval)minimumPressDuration;
 
+@end
+
+
+@interface DVFloatingWindow(Tabs)
 
 /**
  * Switch to previous or next tabs. This action is similar to pressing previous/next
@@ -76,6 +84,10 @@
  */
 - (void)tabSwitchToButtonsTab;
 
+@end
+
+
+@interface DVFloatingWindow(Logger)
 
 /**
  * Create logger with NSString as a key (identifier). Only after logger was created it can
@@ -104,21 +116,6 @@
 - (void)loggerRemove:(NSString *)loggerKey;
 
 /**
- * Set configuration for logger.
- *
- * If logger doesn't exist nothing happens.
- *
- * Corresponding macro - DVLoggerSetConfiguration(
- *                                                   NSString *loggerKey,
- *                                                   BOOL latestMessageOnTop,
- *                                                   BOOL scrollToNewMessage,
- *                                                   UIFont *font
- *                                               )
- */
-- (void)loggerSetConfigurationForLogger:(NSString *)loggerKey
-                          configuration:(DVLoggerConfiguration *)configuration;
-
-/**
  * Add string with format to logger. The appearance depends on a logger configuration.
  *
  * If logger doesn't exist nothing happens.
@@ -129,6 +126,10 @@
 - (void)loggerLogToLogger:(NSString *)loggerKey
                       log:(NSString *)format,...;
 
+@end
+
+
+@interface DVFloatingWindow(Buttons)
 
 /**
  * Add a button with handler to buttons tab. When the button is pressed, handler is called
@@ -141,5 +142,130 @@
  */
 - (void)buttonAddWithTitle:(NSString *)title
                    handler:(DVFloatingWindowButtonHandler)handler;
+
+@end
+
+
+@interface DVFloatingWindow(Config)
+
+/**
+ * This property is used to get or change window frame.
+ *
+ * !!! Please use this property instead of UIView `frame` property
+ *
+ * Corresponding macro - DVConfigFrameGet()
+ *                       DVConfigFrameSet(frame)
+ */
+@property (assign, nonatomic) CGRect configFrame;
+
+/**
+ * Properties below are used to get or change window colors
+ */
+
+/**
+ * Corresponding macro - DVConfigBackgroundColorGet()
+ *                       DVConfigBackgroundColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configBackroundColor;
+
+/**
+ * Corresponding macro - DVConfigTopBGColorGet()
+ *                       DVConfigTopBGColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopBGColor;
+
+/**
+ * Corresponding macro - DVConfigTopMenuBGColorGet()
+ *                       DVConfigTopMenuBGColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopMenuBGColor;
+
+/**
+ * Corresponding macro - DVConfigTopTextColorGet()
+ *                       DVConfigTopTextColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configTopTextColor;
+
+/**
+ * Corresponding macro - DVConfigRightCornerColorGet()
+ *                       DVConfigRightCornerColorSet(color)
+ */
+@property (strong, nonatomic) UIColor *configRightCornerColor;
+
+
+/**
+ * Corresponding macro - DVConfigEmailSubjectGet()
+ *                       DVConfigEmailSubjectSet(subject)
+ */
+@property (strong, nonatomic) NSString *configEmailSubject;
+
+/**
+ * Corresponding macro - DVConfigEmailToRecipientsGet()
+ *                       DVConfigEmailToRecipientsSet(subject)
+ */
+@property (strong, nonatomic) NSArray *configEmailToRecipients;
+
+/**
+ * Corresponding macro - DVConfigEmailCcRecipientsGet()
+ *                       DVConfigEmailCcRecipientsSet(subject)
+ */
+@property (strong, nonatomic) NSArray *configEmailCcRecipients;
+
+/**
+ * Corresponding macro - DVConfigEmailBccRecipientsGet()
+ *                       DVConfigEmailBccRecipientsSet(subject)
+ */
+@property (strong, nonatomic) NSArray *configEmailBccRecipients;
+
+/**
+ * Corresponding macro - DVConfigEmailMessageBodyGet()
+ *                       DVConfigEmailMessageBodySet(subject)
+ */
+@property (strong, nonatomic) NSString *configEmailMessageBody;
+
+/**
+ * Corresponding macro - DVConfigEmailIsMessageBodyHTMLGet()
+ *                       DVConfigEmailIsMessageBodyHTMLSet(subject)
+ */
+@property (assign, nonatomic) BOOL configEmailIsMessageBodyHTML;
+
+
+/**
+ * If logger doesn't exist nothing happens.
+ *
+ * Corresponding macro -
+ * DVConfigLoggerLatestMessageOnTop(NSString *loggerKey, BOOL latestMessageOnTop)
+ */
+- (void)configLogger:(NSString *)loggerKey latestMessageOnTop:(BOOL)latestMessageOnTop;
+
+/**
+ * If logger doesn't exist nothing happens.
+ *
+ * Corresponding macro - DVConfigLoggerFont(NSString *loggerKey, UIFont *font)
+ */
+- (void)configLogger:(NSString *)loggerKey font:(UIFont *)font;
+
+
+#pragma mark -  Deprecated
+
+/**
+ * Method is deprecated, please use these methods instead:
+ * configLogger:latestMessageOnTop:
+ * configLogger:font:
+ *
+ *
+ * Set configuration for logger.
+ *
+ * If logger doesn't exist nothing happens.
+ *
+ * Corresponding macro - DVLoggerSetConfiguration(
+ *                                                   NSString *loggerKey,
+ *                                                   BOOL latestMessageOnTop,
+ *                                                   BOOL scrollToNewMessage,
+ *                                                   UIFont *font
+ *                                               )
+ */
+- (void)loggerSetConfigurationForLogger:(NSString *)loggerKey
+                          configuration:(DVLoggerConfiguration *)configuration __attribute__((deprecated));
 
 @end

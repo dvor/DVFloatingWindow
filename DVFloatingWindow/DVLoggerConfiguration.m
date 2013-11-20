@@ -11,16 +11,23 @@
 @implementation DVLoggerConfiguration
 
 + (DVLoggerConfiguration *)configurationWithLatestMessageOnTop:(BOOL)latestMessageOnTop
-                                            scrollToNewMessage:(BOOL)scrollToNewMessage
                                                           font:(UIFont *)font
 {
     DVLoggerConfiguration *configuration = [DVLoggerConfiguration new];
 
     configuration.latestMessageOnTop = latestMessageOnTop;
-    configuration.scrollToNewMessage = scrollToNewMessage;
     configuration.font = font;
 
     return configuration;
+}
+
+#pragma mark -  Deprecated
+
++ (DVLoggerConfiguration *)configurationWithLatestMessageOnTop:(BOOL)latestMessageOnTop
+                                            scrollToNewMessage:(BOOL)scrollToNewMessage
+                                                          font:(UIFont *)font
+{
+    return [self configurationWithLatestMessageOnTop:latestMessageOnTop font:font];
 }
 
 @end
