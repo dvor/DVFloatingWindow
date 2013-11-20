@@ -4,7 +4,7 @@ DVFloatingWindow is a simple and effective tool for reviewing your application l
 
 You can manage them by creating a separate tab for each log, quickly switch between tabs and see all the details you need. Also there is an opportunity to add buttons with your custom handlers for helping you to debug your app (e.g. send a network request, reset settings, etc.).
 
-![DVFloatingWindow GIF demo](demo.gif)
+![DVFloatingWindow GIF demo](https://raw.github.com/wiki/dvor/DVFloatingWindow/demo-0.3.gif)
 
 # Installation
 
@@ -85,16 +85,7 @@ DVLoggerRemove(@"My custom logger");
 DVLLog(@"My custom logger", @"You won't receive this message");
 ```
 
-You can configure your logger to use different fonts or to change message order.
-
-```objc
-DVLoggerSetConfiguration(
-                            @"Default",  // configuring the Default logger:
-                            YES,         // new messages will appear on the top
-                            YES,         // scroll to new message when it appears
-                            [UIFont systemFontOfSize:15]
-                        );
-```
+To configure logger please see **Configuration** section.
 
 ### Add buttons with handlers
 
@@ -121,6 +112,51 @@ DVTabSwitchToLogger(@"Default");
 
 // show tab with buttons
 DVTabSwitchToButtonsTab();
+```
+
+### Configuration
+
+DVFloatingWindow has some amount of configurable options. All of them start with DVConfig prefix.
+
+```objc
+// you can get or set frame at any time:
+CGRect dvFrame = DVConfigFrameGet();
+dvFrame.origin.x = 30.0;
+dvFrame.origin.y = 20.0;
+DVConfigFrameSet(dvFrame);
+
+// you can change all colors
+DDLog(@"My old background color was %@", DVConfigBackgroundColorGet());
+
+DVConfigBackgroundColorSet([UIColor grayColor]);
+
+DDLog(@"My new background color is %@", DVConfigBackgroundColorGet());
+
+// making it red
+DVConfigTopBGColorSet       ([UIColor redColor]);
+DVConfigTopMenuBGColorSet   ([UIColor darkGrayColor]);
+DVConfigTopTextColorSet     ([UIColor whiteColor]);
+DVConfigRightCornerColorSet ([UIColor redColor]);
+```
+
+You can set or get default email options.
+
+```objc
+DVConfigEmailToRecipientsSet(@[@"my@first.email", @"my@second.email"]);
+DVConfigEmailCcRecipientsSet(@[@"my@third.email"]);
+
+DVConfigEmailSubjectSet(@"My app logs");
+
+DVConfigEmailMessageBodySet(@"Here are some logs:");
+DVConfigEmailIsMessageBodyHTMLSet(NO);
+```
+
+Loggers have only set methods, first argument is always loggerKey.
+
+```objc
+DVConfigLoggerLatestMessageOnTop(@"Default", YES);
+
+DVConfigLoggerFont(@"Pushes logger", [UIFont systemFontOfSize:17.0]);
 ```
 
 ### Release
