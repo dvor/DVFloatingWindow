@@ -195,7 +195,7 @@ Found a bug? Have a feature request? [Please submit an issue](https://github.com
 
 # Contact
 
-[email](mailto:dvor@dvor.me)
+[email](mailto:d@dvor.me)
 
 [@__dvor](https://twitter.com/__dvor)
 
