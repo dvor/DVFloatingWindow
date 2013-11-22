@@ -1,3 +1,9 @@
+## 0.3.1
+
+###### Bugfixes
+
+- Now all UI methods are performing on main thread
+
 ## 0.3
 
 #### Deprecations
