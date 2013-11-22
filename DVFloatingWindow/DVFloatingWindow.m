@@ -82,16 +82,18 @@ typedef enum
 - (id)initPrivate
 {
     if (self = [super initWithFrame:CGRectZero]) {
-        [self createSubviews];
+        [self performBlockOnMainThread:^{
+            [self createSubviews];
 
-        self.configFrame = CGRectMake(0, 100, 100, 100);
-        self.configBackroundColor = [UIColor lightGrayColor];
-        self.configTopBGColor = [UIColor greenColor];
-        self.configTopMenuBGColor = [UIColor lightGrayColor];
-        self.configTopTextColor = [UIColor blackColor];
-        self.configRightCornerColor = [UIColor yellowColor];
+            self.configFrame = CGRectMake(0, 100, 100, 100);
+            self.configBackroundColor = [UIColor lightGrayColor];
+            self.configTopBGColor = [UIColor greenColor];
+            self.configTopMenuBGColor = [UIColor lightGrayColor];
+            self.configTopTextColor = [UIColor blackColor];
+            self.configRightCornerColor = [UIColor yellowColor];
 
-        self.clipsToBounds = YES;
+            self.clipsToBounds = YES;
+        }];
 
         self.arrayWithButtons = [NSMutableArray new];
         self.dictWithLoggers = [NSMutableDictionary new];
@@ -140,32 +142,34 @@ typedef enum
         frame.origin.y = screenBounds.size.height - MIN_VISIBLE_SIZE;
     }
 
-    [super setFrame:frame];
+    [self performBlockOnMainThread:^{
+        [super setFrame:frame];
 
-    frame = self.previousButton.frame;
-    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
-    self.previousButton.frame = frame;
+        CGRect theFrame = self.previousButton.frame;
+        theFrame.origin.y = self.frame.size.height - theFrame.size.height - BORDER_SIZE;
+        self.previousButton.frame = theFrame;
 
-    frame = self.nextButton.frame;
-    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
-    self.nextButton.frame = frame;
+        theFrame = self.nextButton.frame;
+        theFrame.origin.y = self.frame.size.height - theFrame.size.height - BORDER_SIZE;
+        self.nextButton.frame = theFrame;
 
-    frame = self.menuButton.frame;
-    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
-    self.menuButton.frame = frame;
+        theFrame = self.menuButton.frame;
+        theFrame.origin.y = self.frame.size.height - theFrame.size.height - BORDER_SIZE;
+        self.menuButton.frame = theFrame;
 
-    frame = self.autoscrollButton.frame;
-    frame.origin.y = self.frame.size.height - frame.size.height - BORDER_SIZE;
-    self.autoscrollButton.frame = frame;
+        theFrame = self.autoscrollButton.frame;
+        theFrame.origin.y = self.frame.size.height - theFrame.size.height - BORDER_SIZE;
+        self.autoscrollButton.frame = theFrame;
 
-    frame = self.topTitleLabel.frame;
-    frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
-    self.topTitleLabel.frame = frame;
+        theFrame = self.topTitleLabel.frame;
+        theFrame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
+        self.topTitleLabel.frame = theFrame;
 
-    frame = self.bottomCorner.frame;
-    frame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE - BORDER_SIZE;
-    frame.origin.y = self.frame.size.height - BOTTOM_CORNER_SIZE - BORDER_SIZE;
-    self.bottomCorner.frame = frame;
+        theFrame = self.bottomCorner.frame;
+        theFrame.origin.x = self.frame.size.width - BOTTOM_CORNER_SIZE - BORDER_SIZE;
+        theFrame.origin.y = self.frame.size.height - BOTTOM_CORNER_SIZE - BORDER_SIZE;
+        self.bottomCorner.frame = theFrame;
+    }];
 }
 
 - (void)menuButtonPressed
@@ -221,9 +225,12 @@ typedef enum
     @synchronized(self) {
         if (! [self isWindowVisible]) {
             id delegate = [UIApplication sharedApplication].delegate;
-            [[delegate window] addSubview:self];
 
-            [self.tableView reloadData];
+            [self performBlockOnMainThread:^{
+                [[delegate window] addSubview:self];
+
+                [self.tableView reloadData];
+            }];
         }
     }
 }
@@ -231,7 +238,9 @@ typedef enum
 - (void)windowHide
 {
     @synchronized(self) {
-        [self removeFromSuperview];
+        [self performBlockOnMainThread:^{
+            [self removeFromSuperview];
+        }];
     }
 }
 
@@ -329,7 +338,9 @@ typedef enum
         if (self.tableViewState == TableViewStateLogs &&
             [key isEqualToString:self.visibleLoggerKey])
         {
-            [self.tableView reloadData];
+            [self performBlockOnMainThread:^{
+                [self.tableView reloadData];
+            }];
         }
     }
 }
@@ -373,21 +384,23 @@ typedef enum
             self.tableViewState == TableViewStateLogs &&
             [key isEqualToString:self.visibleLoggerKey]) 
         {
-            NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
-            [self.tableView insertRowsAtIndexPaths:@[path]
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self performBlockOnMainThread:^{
+                NSIndexPath *path = [NSIndexPath indexPathForRow:newIndex inSection:0];
+                [self.tableView insertRowsAtIndexPaths:@[path]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
 
-            if (self.autoscrollButton.selected) {
-                UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
-                    UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
+                if (self.autoscrollButton.selected) {
+                    UITableViewScrollPosition scrollPosition = (newIndex == 0) ?
+                        UITableViewScrollPositionTop : UITableViewScrollPositionBottom;
 
-                [self.tableView scrollToRowAtIndexPath:path
-                                      atScrollPosition:scrollPosition
-                                              animated:YES];
-            }
-            else {
-                [self.tableView flashScrollIndicators];
-            }
+                    [self.tableView scrollToRowAtIndexPath:path
+                                          atScrollPosition:scrollPosition
+                                                  animated:YES];
+                }
+                else {
+                    [self.tableView flashScrollIndicators];
+                }
+            }];
         }
     }
 }
@@ -401,7 +414,10 @@ typedef enum
         DVButtonObject *object = [DVButtonObject objectWithName:title handler:handler];
 
         [self.arrayWithButtons addObject:object];
-        [self.tableView reloadData];
+
+        [self performBlockOnMainThread:^{
+            [self.tableView reloadData];
+        }];
     }
 }
 
@@ -409,8 +425,10 @@ typedef enum
 
 - (void)setConfigFrame:(CGRect)configFrame
 {
-    self.frame = configFrame;
-    [self updateTableViewFrame];
+    [self performBlockOnMainThread:^{
+        self.frame = configFrame;
+        [self updateTableViewFrame];
+    }];
 }
 
 - (CGRect)configFrame
@@ -420,7 +438,9 @@ typedef enum
 
 - (void)setConfigBackroundColor:(UIColor *)color
 {
-    self.backgroundColor = color;
+    [self performBlockOnMainThread:^{
+        self.backgroundColor = color;
+    }];
 }
 
 - (UIColor *)configBackroundColor
@@ -434,7 +454,9 @@ typedef enum
 
     if (! [self isStateMenu])
     {
-        self.topTitleLabel.backgroundColor = color;
+        [self performBlockOnMainThread:^{
+            self.topTitleLabel.backgroundColor = color;
+        }];
     }
 }
 
@@ -444,13 +466,17 @@ typedef enum
 
     if ([self isStateMenu])
     {
-        self.topTitleLabel.backgroundColor = color;
+        [self performBlockOnMainThread:^{
+            self.topTitleLabel.backgroundColor = color;
+        }];
     }
 }
 
 - (void)setConfigTopTextColor:(UIColor *)color
 {
-    self.topTitleLabel.textColor = color;
+    [self performBlockOnMainThread:^{
+        self.topTitleLabel.textColor = color;
+    }];
 }
 
 - (UIColor *)configTopTextColor
@@ -460,7 +486,9 @@ typedef enum
 
 - (void)setConfigRightCornerColor:(UIColor *)color
 {
-    self.bottomCorner.backgroundColor = color;
+    [self performBlockOnMainThread:^{
+        self.bottomCorner.backgroundColor = color;
+    }];
 }
 
 - (UIColor *)configRightCornerColor
@@ -483,7 +511,9 @@ typedef enum
         if (self.tableViewState == TableViewStateLogs &&
                 [loggerKey isEqualToString:self.visibleLoggerKey])
         {
-            [self.tableView reloadData];
+            [self performBlockOnMainThread:^{
+                [self.tableView reloadData];
+            }];
         }
     }
 }
@@ -504,7 +534,9 @@ typedef enum
         if (self.tableViewState == TableViewStateLogs &&
                 [loggerKey isEqualToString:self.visibleLoggerKey]) 
         {
-            [self.tableView reloadData];
+            [self performBlockOnMainThread:^{
+                [self.tableView reloadData];
+            }];
         }
     }
 }
@@ -688,6 +720,20 @@ typedef enum
 
 #pragma mark -  Supporting methods
 
+- (void)performBlockOnMainThread:(void (^)())block
+{
+    if (block) {
+        if ([NSThread isMainThread]) {
+            block();
+        }
+        else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                block();
+            });
+        }
+    }
+}
+
 - (void)createSubviews
 {
     {
@@ -844,7 +890,10 @@ typedef enum
     frame.size.width = self.frame.size.width - 2 * BORDER_SIZE;
     frame.size.height = self.frame.size.height - TOP_BORDER_HEIGHT -
         BOTTOM_CORNER_SIZE - 2 * BORDER_SIZE;
-    self.tableView.frame = frame;
+
+    [self performBlockOnMainThread:^{
+        self.tableView.frame = frame;
+    }];
 }
 
 - (void)updateActivationGestureRecognizer:(UIGestureRecognizer *)recognizer
@@ -852,11 +901,13 @@ typedef enum
     id delegate = [UIApplication sharedApplication].delegate;
     UIWindow *window = [delegate window];
 
-    if (self.activateRecognizer) {
-        [window removeGestureRecognizer:self.activateRecognizer];
-    }
+    [self performBlockOnMainThread:^{
+        if (self.activateRecognizer) {
+            [window removeGestureRecognizer:self.activateRecognizer];
+        }
 
-    [window addGestureRecognizer:recognizer];
+        [window addGestureRecognizer:recognizer];
+    }];
     self.activateRecognizer = recognizer;
 }
 
@@ -867,24 +918,28 @@ typedef enum
 
 - (void)updateAll
 {
-    [self updateTopTitleLabelText];
-    [self.tableView reloadData];
+    [self performBlockOnMainThread:^{
+        [self updateTopTitleLabelText];
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)updateTopTitleLabelText
 {
-    if ([self isStateMenu]) {
-        self.topTitleLabel.text = @"<<Menu>>";
-        self.topTitleLabel.backgroundColor = self.configTopMenuBGColor;
-    }
-    else if (self.tableViewState == TableViewStateButtons) {
-        self.topTitleLabel.text = @"<<Buttons>>";
-        self.topTitleLabel.backgroundColor = self.configTopBGColor;
-    }
-    else if (self.tableViewState == TableViewStateLogs) {
-        self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
-        self.topTitleLabel.backgroundColor = self.configTopBGColor;
-    }
+    [self performBlockOnMainThread:^{
+        if ([self isStateMenu]) {
+            self.topTitleLabel.text = @"<<Menu>>";
+            self.topTitleLabel.backgroundColor = self.configTopMenuBGColor;
+        }
+        else if (self.tableViewState == TableViewStateButtons) {
+            self.topTitleLabel.text = @"<<Buttons>>";
+            self.topTitleLabel.backgroundColor = self.configTopBGColor;
+        }
+        else if (self.tableViewState == TableViewStateLogs) {
+            self.topTitleLabel.text = [NSString stringWithFormat:@"%@", self.visibleLoggerKey];
+            self.topTitleLabel.backgroundColor = self.configTopBGColor;
+        }
+    }];
 }
 
 - (void)tabShowNextOrPrevious:(BOOL)showNext
